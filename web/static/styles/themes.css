@@ -1,0 +1,48 @@
+/* SYSTEM ONLINE */
+
+
+body {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+}
+
+img.center {
+    display: block;
+    margin: 0 auto;
+}
+
+div.request {
+    margin-top: 30pt;
+    text-align: center;
+}
+
+flash {
+
+}
+
+.login-buttons {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.login {
+    width: 700px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.header {
+    text-align: center;
+}
+.header .navlinks {
+    #padding-top: 5%;
+}
+.body {
+    #padding-top: 30%;
+}
+.footer {
+    text-align: center;
+}

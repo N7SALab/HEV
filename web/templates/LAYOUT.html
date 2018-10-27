@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<% if title %><title>%% title %%</title><% endif %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="%% url_for('static', filename='favicon.ico') %%">
+
+    <link rel="stylesheet" href="%% url_for('static', filename='styles/themes.css') %%" media="screen">
+    <link rel="stylesheet" href="%% url_for('static', filename='styles/grid.css') %%" media="screen">
+    <link rel="stylesheet" href="%% url_for('static', filename='lib/css/bootstrap-4.1.1/bootstrap.min.css') %%">
+    <!--<link rel="stylesheet" href="%% url_for('static', filename='lib/css/bootstrap-4.1.1/bootstrap-reboot.min.css') %%">-->
+
+    <!-- Animate library -->
+    <script src="%% url_for('static', filename='lib/js/anime-2.2.0/anime.min.js') %%"></script>
+
+    <!-- Visualization library-->
+    <script src="%% url_for('static', filename='lib/js/d3-v5/d3.min.js') %%"></script>
+
+    <!--jQuery first, then Popper.js, then Bootstrap JS-->
+    <script src="%% url_for('static', filename='lib/js/jquery-3.3.1/jquery-3.3.1.slim.min.js') %%"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="%% url_for('static', filename='lib/js/popper-1.14.4/popper.min.js') %%"
+            crossorigin="anonymous"></script>
+    <script src="%% url_for('static', filename='lib/js/bootstrap-4.1.1/bootstrap.min.js') %%"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
+
+    <% block head %><% endblock %>
+</head>
+<body>
+<header class="header"><% block header%><% endblock %></header>
+<div class="body"><% block body %><% endblock %></div>
+<footer class="footer"><% block footer %><% endblock %></footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+"config": {
+    "neo4j": {
+        "user": "neo4j",
+        "password": "",
+        "servers": ["bolt://neo4j:7687", ""]
+        },
+    "elasticsearch": {
+        "hosts": []
+        },
+    "minio": {
+        "host": "minio:9000",
+        "access_key": "",
+        "secret_key": "",
+        "bucket": "",
+        "folder": "",
+        "client_configs": ""
+        }
+    }
+}

@@ -1,0 +1,7 @@
+bcrypt
+elasticsearch
+Flask
+Flask-Login
+Flask-WTF
+neo4j-driver
+minio

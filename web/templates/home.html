@@ -1,0 +1,25 @@
+<% extends "LAYOUT.html" %>
+<% block head %><% endblock %>
+<% block header %><% endblock %>
+<% block body %>
+
+<div class="center-block text-center hello">
+    <a href="/authenticate">
+        <img class="rounded-circle" width="100px"
+             src="%% url_for('static', filename='img/is/here/to/open/silence/to/all.gif') %%"
+             alt="And so it Begins.">
+    </a>
+
+    <p>
+    <h2>%% welcome %%</h2></p>
+
+    <% if authenticated %>
+    <p class="text-center">
+        <a href="/bye"><button type="button" class="btn btn-danger btn-xs">Exit</button></a>
+    </p>
+    <% endif %>
+
+</div>
+
+<% endblock %>
+<% block footer %><% endblock %>

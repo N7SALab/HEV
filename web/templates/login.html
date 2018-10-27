@@ -1,0 +1,88 @@
+<% extends "LAYOUT.html" %>
+<% block head %>
+<% endblock %>
+<% block header%>
+<% endblock %>
+<% block body %>
+
+
+<div class="text-center pagination-centered" xmlns="http://www.w3.org/1999/html">
+
+    <form class="form-inline" action="" method="post">
+
+        <div class="mx-auto">
+
+            <div class="container">
+                <!-- who are you? -->
+                <input type="email" class="login-buttons form-control" placeholder="Account" name="username"
+                       value="%% request.form.username %%">
+                <!-- what's your secret? -->
+                <input type="password" class="login-buttons form-control" placeholder="Password" name="password"
+                       value="%% request.form.password %%">
+                <!-- enter -->
+                <button type="submit" class="btn btn-default btn-block">Enter</button>
+
+                <!-- remember -->
+                <div class="login-buttons btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-sm btn-default btn-outline-dark">
+                    <input type="checkbox" name="remember" autocomplete="off">Remember Me</label>
+                </div>
+
+            </div>
+
+
+        </div>
+    </form>
+
+
+    <% if error %>
+    <p class="text-center">
+    <h5>
+        <mark>%% error %%</mark>
+    </h5>
+    </p>
+    <% endif %>
+
+
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').trigger('focus')
+        })
+    </script>
+
+
+    <!-- Button trigger modal -->
+    <div class="request">
+        <small>
+            <abbr data-toggle="modal" data-target="#exampleModal" title="">
+                Request Access
+            </abbr>
+        </small>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div class="modal-body">
+                        Our request limit has been reached!
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<% endblock %>
+<% block footer %>
+<% endblock %>

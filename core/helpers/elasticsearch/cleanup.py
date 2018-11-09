@@ -1,6 +1,8 @@
-
+import asyncio
 import logging
 import elasticsearch
+
+from core.helpers.log import log
 from logging import DEBUG, INFO, WARNING
 
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -67,7 +69,7 @@ class ElasticsearchConnect:
             msg = '''\nYOU'RE ABOUT TO DELETE {} INDEX! ARE YOU SURE YOU WANT TO CONTINUE? '''
         elif num_indices > 1:
             msg = '''\nYOU'RE ABOUT TO DELETE {} INDICES! ARE YOU SURE YOU WANT TO CONTINUE? '''
-        msg += '''THIS CANNOT BE UNDONE! DECIDED WISELY [y/N]'''
+        msg += '''THIS CANNOT BE UNDONE! DECIDE WISELY [y/N]'''
         msg = msg.format(num_indices)
         print(msg)
 
@@ -98,16 +100,15 @@ class ElasticsearchConnect:
         logging.info(msg)
 
 
-es = ElasticsearchConnect('10.0.0.2', use_ssl=False, request_timeout=40)
-# logging.debug(es.wrapper.info())
+if __name__ == '__main__':
 
-# logging.info(es.get_indices())
+    es = ElasticsearchConnect('10.0.0.2', use_ssl=False, request_timeout=40)
+    # logging.debug(es.wrapper.info())
 
-pattern = '*'
-search = es.search_indices(pattern)
-keys = sorted(list(search.keys()))
+    # logging.info(es.get_indices())
 
-# es.delete_indices(pattern)
+    pattern = '*'
+    search = es.search_indices(pattern)
+    keys = sorted(list(search.keys()))
 
-
-print()
+    # es.delete_indices(pattern)

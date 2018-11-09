@@ -11,15 +11,14 @@
 # Usage: python3 run-hev.py
 #
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 import json
 import asyncio
 import threading
 
-from core.helpers.log import *
 from modules import openvpn
-
+from core.helpers.log import log
 
 
 try:

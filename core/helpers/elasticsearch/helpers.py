@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 
-from core.helpers import log
+from core.helpers.log import log
 
 
 async def es_wrapper(hosts):

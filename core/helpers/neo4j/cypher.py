@@ -12,7 +12,7 @@ from logging import DEBUG, INFO, ERROR, WARNING
 
 
 def assert_label(label):
-    """Make sure neo4j label is formatted correctly
+    """ Make sure neo4j label is formatted correctly
     """
     label = str(label)
     if label:
@@ -29,8 +29,7 @@ def assert_label(label):
 
 
 class neo4j_wrapper:
-    """Neo4j wrapper
-    
+    """ Neo4j wrapper
     """
     
     def __init__(self, conf):
@@ -46,8 +45,7 @@ class neo4j_wrapper:
                 logging.error('Cannot connect to neo4j server: {}'.format(server))
 
     def _prepare_dict(self, blob):
-        """All inputs first needs to dicts
-    
+        """ All inputs first needs to dicts
         """
         try:
             return dict(blob)
@@ -55,8 +53,7 @@ class neo4j_wrapper:
             return dict(raw=urlencode(blob))
     
     def _consolidate(self, query):
-        """Join cypher queries list into a string
-
+        """ Join cypher queries list into a string
         """
         return '\n'.join(query).strip()
 
@@ -90,10 +87,9 @@ class neo4j_wrapper:
         return query
 
     def _send(self, cypher):
-        """This is the query that will be run on the database. So make sure by the time it
-        gets to this function all prior checks have passed. Also, create a last check in
-        this function for general cypher query-ness
-
+        """ This is the query that will be run on the database. So make sure by the time it
+            gets to this function all prior checks have passed. Also, create a last check in
+            this function for general cypher query-ness
         """
         with self.driver.session() as session:
             results = session.run(cypher)
@@ -104,8 +100,7 @@ class neo4j_wrapper:
         return results
 
     def send_data(self, label, data):
-        """Just take the entry and put it into the database to be parsed later
-    
+        """ Just take the entry and put it into the database to be parsed later
         """
         query = self._create_query(label, data)
         final_cypher = self._consolidate(query)  # self._consolidate sets of queries into one single related query
@@ -115,8 +110,7 @@ class neo4j_wrapper:
         return self._send(final_cypher)
 
     def create_relationship(self, cypher):
-        """Create relationship
-
+        """ Create relationship
         """
         logging.debug(cypher)
         return self._send(cypher)

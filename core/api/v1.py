@@ -12,8 +12,8 @@ import asyncio
 
 from flask import (Flask, request, redirect, render_template)
 
+from core.helpers.log import log
 from core.helpers.flask import config, auth
-from core.helpers.log import *
 from core.helpers.crypto import secret
 from core.helpers.neo4j.cypher import neo4j_wrapper
 
@@ -44,7 +44,6 @@ n = neo4j_wrapper(CONF)
 @app.route('/', methods=['GET'])
 def home(**args):
     """ Default home route
-
     """
     log('request: {}'.format(request))
 
@@ -76,7 +75,6 @@ def home(**args):
 @app.route('/authenticate', methods=['GET', 'POST'])
 def login():
     """ User login page
-
     """
     log('request: {}'.format(request))
 

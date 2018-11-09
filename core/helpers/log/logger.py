@@ -22,3 +22,4 @@ def log(message, module=None):
             logging.info('[{}] {}'.format(module, message))
         else:
             logging.info('{}'.format(message))
+

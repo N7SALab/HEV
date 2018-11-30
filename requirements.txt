@@ -1,7 +1,8 @@
-bcrypt
+minio
+neo4j-driver
 elasticsearch
 Flask
-Flask-Login
 Flask-WTF
-neo4j-driver
-minio
+Flask-Login
+requests
+bcrypt

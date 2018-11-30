@@ -3,6 +3,9 @@ from elasticsearch import Elasticsearch
 from core.helpers.log import log
 
 
+# TODO: These are expecting an Elasticsearch object
+
+
 async def es_wrapper(hosts):
     """ A wrapper for Elastcisearch
 

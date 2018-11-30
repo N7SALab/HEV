@@ -19,6 +19,7 @@ import threading
 
 from modules import openvpn
 from core.helpers.log import log
+from core.helpers.elasticsearch import cleanup
 
 
 try:
@@ -32,12 +33,16 @@ except:
 async def main(event_loop):
     log('running')
 
+    log('running elasticsearch helpers')
+    cleanup.main()
+    return
+
 
 if __name__ == "__main__":
 
     event_loop = asyncio.get_event_loop()
     try:
-        event_loop.create_task(openvpn.run(event_loop))
+        #event_loop.create_task(openvpn.run(event_loop))
         event_loop.create_task(main(event_loop))
         event_loop.run_forever()
     except KeyboardInterrupt:
@@ -50,3 +55,4 @@ if __name__ == "__main__":
             if event_loop.is_closed():
                 log('Loop closed')
         log('System off')
+

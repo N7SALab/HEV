@@ -1,7 +1,9 @@
 import asyncio
 import logging
+import datetime
 import elasticsearch
 
+from .helpers import *
 from core.helpers.log import log
 from logging import DEBUG, INFO, WARNING
 
@@ -13,7 +15,7 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 
 class ElasticsearchConnect:
 
-    def __init__(self, host='elasticsearch.world1', port=9200, request_timeout=10,
+    def __init__(self, host='elasticsearch', port=9200, request_timeout=10,
                  http_auth=None, use_ssl=True, verify_certs=True,
                  connection_class=RequestsHttpConnection):
 
@@ -32,7 +34,7 @@ class ElasticsearchConnect:
 
     def search_indices(self, index_pattern):
         try:
-            retrieved_indices = es.wrapper.indices.get(index_pattern)
+            retrieved_indices = self.wrapper.indices.get(index_pattern)
             num_indices = len(retrieved_indices)
 
             msg = 'Search found {} indices'
@@ -91,7 +93,7 @@ class ElasticsearchConnect:
             print(msg)
 
     def get_indices(self):
-        retrieved_indices = es.wrapper.indices.get('*')
+        retrieved_indices = self.wrapper.indices.get('*')
         num_indices = len(retrieved_indices)
 
         self.indices = retrieved_indices
@@ -100,15 +102,43 @@ class ElasticsearchConnect:
         logging.info(msg)
 
 
-if __name__ == '__main__':
-
-    es = ElasticsearchConnect('10.0.0.2', use_ssl=False, request_timeout=40)
+def main():
+    es = ElasticsearchConnect('rancher.n7sa.com', use_ssl=False, request_timeout=40)
     # logging.debug(es.wrapper.info())
 
     # logging.info(es.get_indices())
+
+    DAYS = 30
 
     pattern = '*'
     search = es.search_indices(pattern)
     keys = sorted(list(search.keys()))
 
-    # es.delete_indices(pattern)
+    # ignore these indices
+    keys.remove('.kibana')
+
+    for alias in keys:
+        # indices = get_indice(es, alias)
+        indices = es.wrapper.indices.get(alias)
+
+        creation_date = indices[alias]['settings']['index']['creation_date']
+        creation_date = int(creation_date)
+
+        # month old
+        month = datetime.timedelta(days=DAYS)
+        today = datetime.datetime.today()
+        past = today - month
+        epoch = past - datetime.datetime.utcfromtimestamp(0)
+        delete_older = int(epoch.total_seconds()) * 1000
+
+        if creation_date < delete_older:
+            # delete index
+            # es.indices.delete(alias, ignore=[400, 404])
+            es.wrapper.indices.delete(alias)
+            print('deleted', alias)
+
+    print('done')
+
+
+if __name__ == '__main__':
+    main()

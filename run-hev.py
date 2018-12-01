@@ -19,7 +19,7 @@ import threading
 
 from modules import openvpn
 from core.helpers.log import log
-from core.helpers.elasticsearch import cleanup
+from core.helpers import elasticsearch
 
 
 try:
@@ -30,20 +30,17 @@ except:
 
 # TODO: add threading support
 # TODO: api needs to run in it's own thread
-async def main(event_loop):
-    log('running')
-
-    log('running elasticsearch helpers')
-    cleanup.main()
-    return
+async def main(event_loop, CONF):
+    log('Main started')
 
 
 if __name__ == "__main__":
 
     event_loop = asyncio.get_event_loop()
     try:
-        #event_loop.create_task(openvpn.run(event_loop))
-        event_loop.create_task(main(event_loop))
+        event_loop.create_task(openvpn.build_client_configs.run(event_loop, CONF['config']['minio']))
+        event_loop.create_task(elasticsearch.cleanup.run(event_loop, CONF))
+        event_loop.create_task(main(event_loop, CONF))
         event_loop.run_forever()
     except KeyboardInterrupt:
         log('Interupted')

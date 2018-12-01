@@ -11,7 +11,7 @@ async def es_wrapper(hosts):
 
     """
     log('es_wrapper', 'Connecting to Elasticsearch')
-    return Elasticsearch(hosts)
+    return await Elasticsearch(hosts)
 
 
 async def send_doc(es):
@@ -27,7 +27,7 @@ async def get_alias(es, alias='*'):
 
     """
     log('get_alias', 'Get alias: {}'.format(alias))
-    return es.indices.get_alias(alias)
+    return await es.indices.get_alias(alias)
 
 
 async def get_indice(es, index='*'):
@@ -35,7 +35,7 @@ async def get_indice(es, index='*'):
 
     """
     log('get_indice', 'Get index: {}'.format(index))
-    return es.indices.get(index)
+    return await es.indices.get(index)
 
 
 async def info(es):
@@ -43,7 +43,7 @@ async def info(es):
 
     """
     log('info', 'Get Elasticsearch info')
-    return es.info()
+    return await es.info()
 
 
 async def ping(es):
@@ -51,4 +51,4 @@ async def ping(es):
 
     """
     log('ping', 'Ping Elasticsearch cluster')
-    return es.ping()
+    return await es.ping()

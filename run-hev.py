@@ -11,7 +11,7 @@
 # Usage: python3 run-hev.py
 #
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 import json
 import asyncio
@@ -52,4 +52,3 @@ if __name__ == "__main__":
             if event_loop.is_closed():
                 log('Loop closed')
         log('System off')
-

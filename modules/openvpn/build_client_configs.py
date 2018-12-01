@@ -1,23 +1,16 @@
 import os
 import io
-import json
 
 from minio import Minio
 
 from core.helpers.log import log
 
 
-try:
-    CONF = json.load(open('/var/www/hev.conf'))
-except:
-    CONF = json.load(open('hev.conf'))
-
-
 class ClientConfig:
     """ Create an OpenVPN client config
     """
 
-    def __init__(self, name, conf):
+    def __init__(self, name, hosts, options=None):
         """
         client
         dev tun
@@ -53,13 +46,15 @@ class ClientConfig:
 
         log('Creating new OpenVPN client config', __name__)
 
-        server = conf['config']['minio']['host']
-
         self.name = name
 
         self.config = 'client\n'
         self.config += 'dev tun\n'
-        self.config += 'remote {}\n'.format(server)
+
+        for host in hosts:
+            host, port, conn = host.split(':')
+            self.config += 'remote {} {} {}\n'.format(host, port, conn)
+
         self.config += 'resolv-retry infinite\n'
         self.config += 'nobind\n'
         self.config += 'persist-key\n'
@@ -70,11 +65,16 @@ class ClientConfig:
         self.config += 'tls-auth [inline] 1\n'
         self.config += 'verb 1\n'
         self.config += 'keepalive 10 120\n'
-        self.config += 'port 1194\n'
-        self.config += 'proto udp\n'
         self.config += 'cipher BF-CBC\n'
         self.config += 'comp-lzo\n'
         self.config += 'remote-cert-tls server\n'
+        self.config += 'key-direction 1\n'
+
+        if options:
+            for option in options:
+                self.config += option
+
+        self.CONFIG = self.config.split('\n')
 
         self.ca = None
         self.cert = None
@@ -91,9 +91,9 @@ class ClientConfig:
         self.key = '{}\n{}\n{}\n'.format('<key>', key.decode(), '</key>')
 
     def add_ta(self, ta):
-        self.ta = '{}\n{}\n{}\n'.format('<ta>', ta.decode(), '</ta>')
+        self.ta = '{}\n{}\n{}\n'.format('<tls-auth>', ta.decode(), '</tls-auth>')
 
-    def build_config(self):
+    def build_config(self, prefix):
 
         config = self.config
         config += self.ca
@@ -101,7 +101,10 @@ class ClientConfig:
         config += self.key
         config += self.ta
 
-        filename = self.name + '.ovpn'
+        if prefix:
+            filename = prefix + '-' + self.name + '.ovpn'
+        else:
+            filename = self.name + '.ovpn'
 
         return filename, io.BytesIO(config.encode()), len(config)
 
@@ -154,7 +157,7 @@ async def put_object(minioClient, bucket, client_configs, config_name, config_da
     """ Minio object uploader
     """
     log('Uploading: {}'.format(config_name), __name__)
-    return minioClient.put_object(bucket, client_configs + config_name, config_data, config_len)
+    return minioClient.put_object(bucket, '{}/{}'.format(client_configs, config_name), config_data, config_len)
 
 
 async def downloader(minioClient, bucket, file):
@@ -164,12 +167,12 @@ async def downloader(minioClient, bucket, file):
     return minioClient.get_object(bucket, file.object_name)
 
 
-async def creator(minioClient, bucket, client_configs, ca, cert, key, ta):
+async def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options=None):
     """ Create and upload OpenVPN Client config
     """
     for user, data in cert:
         name, _ = os.path.splitext(user)
-        config = ClientConfig(name, CONF)
+        config = ClientConfig(name, hosts, options)
         config.add_ca(ca)
         config.add_ta(ta)
         config.add_cert(data)
@@ -181,27 +184,43 @@ async def creator(minioClient, bucket, client_configs, ca, cert, key, ta):
             if name == k_name:
               config.add_key(k_data)
 
-        config_name, config_data, config_len = config.build_config()
+        config_name, config_data, config_len = config.build_config(prefix)
 
         await put_object(minioClient, bucket, client_configs, config_name, config_data, config_len)
 
         log('OpenVPN client config uploaded: {}'.format(config_name), __name__)
 
 
-async def main():
+async def main(CONF):
     # Minio
-    minioClient = Minio(CONF['config']['minio']['host'],
-                        access_key=CONF['config']['minio']['access_key'],
-                        secret_key=CONF['config']['minio']['secret_key'],
+    minioClient = Minio(CONF['host'],
+                        access_key=CONF['access_key'],
+                        secret_key=CONF['secret_key'],
                         secure=False)
 
-    bucket = CONF['config']['minio']['bucket']
-    folder = CONF['config']['minio']['folder']
-    client_configs = CONF['config']['minio']['client_configs']
+    bucket = CONF['bucket']
 
-    ca, cert, key, ta = await collector(minioClient, bucket, folder)
-    await creator(minioClient, bucket, client_configs, ca, cert, key, ta)
+    openvpn_configs = CONF['openvpn']
+
+    for config in openvpn_configs:
+        hosts = config['hosts']
+        folder = config['folder']
+        keys = folder + '/pki'
+        client_configs = folder + '/configs'
+        try:
+            prefix = config['prefix']
+        except:
+            prefix = None
+        try:
+            options = config['options']
+        except:
+            options = None
+
+        ca, cert, key, ta = await collector(minioClient, bucket, keys)
+        await creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
+
+    log('Finshed building all OpenVPN clients', __name__)
 
 
-async def run(event_loop):
-    event_loop.create_task(main())
+async def run(event_loop, CONF):
+    event_loop.create_task(main(CONF))

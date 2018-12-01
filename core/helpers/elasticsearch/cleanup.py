@@ -1,16 +1,10 @@
-import asyncio
-import logging
 import datetime
 import elasticsearch
 
-from .helpers import *
-from core.helpers.log import log
-from logging import DEBUG, INFO, WARNING
-
+from logging import DEBUG, INFO, ERROR
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
-
-# logging.basicConfig(level=WARNING)
+from core.helpers.log import hevlog
 
 
 class ElasticsearchConnect:
@@ -39,12 +33,12 @@ class ElasticsearchConnect:
 
             msg = 'Search found {} indices'
             msg = msg.format(num_indices)
-            logging.info(msg)
+            hevlog(msg, __name__, INFO)
             return retrieved_indices
         except elasticsearch.exceptions.NotFoundError:
             msg = '''You provided the index pattern '{}', but searches returned fruitless'''
             msg = msg.format(index_pattern)
-            logging.error(msg)
+            hevlog(msg, __name__, ERROR)
 
     def delete_indices(self, index_pattern):
 
@@ -53,13 +47,12 @@ class ElasticsearchConnect:
 
         msg = 'Search found {} indices'
         msg = msg.format(num_indices)
-        logging.info(msg)
+        hevlog(msg, __name__, INFO)
 
         if not num_indices:
             msg = '''No indices found. exiting'''
             print(msg)
             return False
-
 
         for index in retrieved_indices:
             print(index)
@@ -99,13 +92,15 @@ class ElasticsearchConnect:
         self.indices = retrieved_indices
         msg = 'Retrieved {} indices'
         msg = msg.format(num_indices)
-        logging.info(msg)
+        hevlog(msg, __name__, INFO)
 
 
-def main():
+def run():
     es = ElasticsearchConnect('rancher.n7sa.com', use_ssl=False, request_timeout=40)
-    # logging.debug(es.wrapper.info())
+    hevlog(es.wrapper.info(), __name__, DEBUG)
+    hevlog(es.get_indices(), __name__, DEBUG)
 
+    # logging.debug(es.wrapper.info())
     # logging.info(es.get_indices())
 
     DAYS = 30
@@ -138,7 +133,3 @@ def main():
             print('deleted', alias)
 
     print('done')
-
-
-if __name__ == '__main__':
-    main()

@@ -193,10 +193,8 @@ async def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts,
 
 async def main(CONF):
     # Minio
-    minioClient = Minio(CONF['host'],
-                        access_key=CONF['access_key'],
-                        secret_key=CONF['secret_key'],
-                        secure=False)
+    from core.helpers import minio
+    minioClient = minio.Client(CONF)
 
     bucket = CONF['bucket']
 

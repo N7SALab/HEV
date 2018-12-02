@@ -9,18 +9,26 @@ from core.helpers.log import hevlog
 
 class ElasticsearchConnect:
 
-    def __init__(self, host='elasticsearch', port=9200, request_timeout=10,
+    def __init__(self, host=['elasticsearch'], port=9200, request_timeout=10,
                  http_auth=None, use_ssl=True, verify_certs=True,
                  connection_class=RequestsHttpConnection):
+        for _host in host:
+            try:
+                # TODO: maybe make this accept only one host
+                self.wrapper = Elasticsearch(
+                    hosts=[{'host': _host, 'port': port}],
+                    request_timeout=request_timeout,
+                    http_auth=http_auth,
+                    use_ssl=use_ssl,
+                    verify_certs=verify_certs,
+                    connection_class=connection_class
+                )
+            except:
+                self.wrapper = None
+            finally:
+                if self.wrapper is None:
+                    raise Exception('No elasticsearch hosts available')
 
-        self.wrapper = Elasticsearch(
-            hosts=[{'host': host, 'port': port}],
-            request_timeout=request_timeout,
-            http_auth=http_auth,
-            use_ssl=use_ssl,
-            verify_certs=verify_certs,
-            connection_class=connection_class
-        )
         self.host = host
         self.port = port
         self.cache = []
@@ -95,8 +103,9 @@ class ElasticsearchConnect:
         hevlog(msg, __name__, INFO)
 
 
-def run():
-    es = ElasticsearchConnect('rancher.n7sa.com', use_ssl=False, request_timeout=40)
+async def run(event_loop, CONF):
+    es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
+
     hevlog(es.wrapper.info(), __name__, DEBUG)
     hevlog(es.get_indices(), __name__, DEBUG)
 

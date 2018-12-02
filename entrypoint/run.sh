@@ -8,5 +8,5 @@ cd ../
 
 base="/hev"
 
-pip3 install -r $base/requirements.txt
+python3 -m pip install -r $base/requirements.txt
 python3 $base/run-hev.py

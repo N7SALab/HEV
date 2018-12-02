@@ -1,3 +1,4 @@
+pytz
 minio
 neo4j-driver
 elasticsearch
@@ -6,4 +7,3 @@ Flask-WTF
 Flask-Login
 requests
 bcrypt
-pytz

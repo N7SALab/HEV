@@ -15,11 +15,14 @@ __version__ = '0.0.3'
 
 import json
 import asyncio
-import threading
 
 from modules import openvpn
+
+from core import api
 from core.helpers.log import log
 from core.helpers import elasticsearch
+
+from multiprocessing import Process
 
 
 try:
@@ -34,9 +37,9 @@ async def main(event_loop, CONF):
     log('Main started')
 
 
-if __name__ == "__main__":
-
+def bootstrap():
     event_loop = asyncio.get_event_loop()
+
     try:
         event_loop.create_task(openvpn.build_client_configs.run(event_loop, CONF['config']['minio']))
         event_loop.create_task(elasticsearch.cleanup.run(event_loop, CONF['config']['elasticsearch']))
@@ -52,3 +55,16 @@ if __name__ == "__main__":
             if event_loop.is_closed():
                 log('Loop closed')
         log('System off')
+
+
+if __name__ == "__main__":
+    jobs= []
+
+    jobs.append(Process(target=api.statichev()))
+    # jobs.append(Process(target=bootstrap()))
+
+    for j in jobs:
+        j.start()
+
+    for j in jobs:
+        j.join()

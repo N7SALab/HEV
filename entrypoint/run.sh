@@ -9,4 +9,4 @@ cd ../
 base="/hev"
 
 python3 -m pip install -r $base/requirements.txt
-python3 $base/run-hev.py
+python3 $base/run_HEV.py

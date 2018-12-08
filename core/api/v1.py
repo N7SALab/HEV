@@ -12,6 +12,8 @@ import asyncio
 
 from flask import (Flask, request, redirect, render_template)
 
+from run_HEV import bootstrap
+
 from core.helpers.log import log
 from core.helpers.flask import config, auth
 from core.helpers.crypto import secret
@@ -25,7 +27,7 @@ except:
 
 
 # Initializing app
-app = Flask(__name__, template_folder='web/templates', static_folder='web/static')
+app = Flask(__name__, template_folder='../../web/templates', static_folder='../../web/static')
 app.secret_key = secret.new_secret_key()
 app.jinja_options = config.javascript_compatibility(app)
 
@@ -78,7 +80,7 @@ def login():
     """
     log('request: {}'.format(request))
 
-    title = 'Enter Universe'
+    title = 'Hunt Everything'
 
     authenticated, error = auth.login(request)
 
@@ -112,19 +114,13 @@ async def hev():
     app.run(host='0.0.0.0', port=8080)
 
 
-if __name__ == "__main__":
+def statichev():
+    # this doesn't work as expected
+    log('HEV is starting')
 
-    event_loop = asyncio.get_event_loop()
-    try:
-        event_loop.create_task(hev())
-        event_loop.run_forever()
-    except KeyboardInterrupt:
-        log('Interupted')
-    finally:
-        log('Shutting down')
-        log('Closing loop')
-        while event_loop.is_running():
-            event_loop.close()
-            if event_loop.is_closed():
-                log('Loop closed')
-        log('System off')
+    # app.run(host='0.0.0.0', debug=True, port=8080)
+    app.run(host='0.0.0.0', port=8080)
+
+
+if __name__ == "__main__":
+    statichev()

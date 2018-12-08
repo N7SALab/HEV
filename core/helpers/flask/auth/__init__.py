@@ -1,6 +1,5 @@
 import bcrypt
 import random
-import logging
 
 from flask import (redirect, url_for, session, flash)
 from flask import (session, redirect, url_for)
@@ -8,9 +7,6 @@ from flask_login import (logout_user, login_user, login_fresh,
                          current_user, LoginManager, UserMixin)
 
 from .auth_creds import credential_db
-
-
-# logging.basicConfig(level=logging.WARNING)
 
 
 def login_manager_wrapper(app):

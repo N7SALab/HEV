@@ -1,14 +1,15 @@
 import re
 import logging
 
+from textwrap import dedent
 from urllib.parse import urlencode
 from datetime import datetime, timezone
-from textwrap import dedent
 from neo4j.v1 import GraphDatabase, basic_auth
-from logging import DEBUG, INFO, ERROR, WARNING
+
+from core.helpers.log import hevlog
 
 
-# logging.basicConfig(level=WARNING)
+hevlog = hevlog(level='debug')
 
 
 def assert_label(label):
@@ -40,9 +41,9 @@ class neo4j_wrapper:
         for server in self.servers:
             try:
                 self.driver = GraphDatabase.driver(server, auth=(self.user, self.password))
-                logging.info('Connected to neo4j server: {}'.format(server))
+                hevlog.log('Connected to neo4j server: {}'.format(server), __name__, 'info')
             except:
-                logging.error('Cannot connect to neo4j server: {}'.format(server))
+                hevlog.log('Cannot connect to neo4j server: {}'.format(server), __name__)
 
     def _prepare_dict(self, blob):
         """ All inputs first needs to dicts
@@ -108,6 +109,12 @@ class neo4j_wrapper:
         logging.debug(final_cypher)
     
         return self._send(final_cypher)
+
+    def create_node(self, cypher):
+        """ Create node
+        """
+        logging.debug(cypher)
+        return self._send(cypher)
 
     def create_relationship(self, cypher):
         """ Create relationship

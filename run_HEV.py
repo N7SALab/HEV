@@ -19,10 +19,13 @@ import asyncio
 from modules import openvpn
 
 from core import api
-from core.helpers.log import log
+from core.helpers.log import hevlog
 from core.helpers import elasticsearch
 
 from multiprocessing import Process
+
+
+hevlog = hevlog(level='debug')
 
 
 try:
@@ -34,7 +37,7 @@ except:
 # TODO: add threading support
 # TODO: api needs to run in it's own thread
 async def main(event_loop, CONF):
-    log('Main started')
+    hevlog.log('Main started')
 
 
 def bootstrap():
@@ -46,15 +49,15 @@ def bootstrap():
         event_loop.create_task(main(event_loop, CONF))
         event_loop.run_forever()
     except KeyboardInterrupt:
-        log('Interupted')
+        hevlog.log('Interupted')
     finally:
-        log('Shutting down')
-        log('Closing loop')
+        hevlog.log('Shutting down')
+        hevlog.log('Closing loop')
         while event_loop.is_running():
             event_loop.close()
             if event_loop.is_closed():
-                log('Loop closed')
-        log('System off')
+                hevlog.log('Loop closed')
+        hevlog.log('System off')
 
 
 if __name__ == "__main__":

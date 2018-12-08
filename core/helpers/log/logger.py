@@ -3,66 +3,29 @@ import logging
 from logging import INFO, DEBUG, WARNING, ERROR
 
 
-# Set logger format
-# FORMAT = '%(asctime)s %(levelname)s %(threadName)s %(module)s  %(message)s'
-# FORMAT = '[%(asctime)s][%(levelname)s ][%(threadName)s] [%(module)s] %(message)s'
-# FORMAT = '%(asctime)s [%(levelname)s ] %(message)s'
-FORMAT = '[%(levelname)s ] %(message)s'
-
-
-# def log(message=None, module=None, log_type=None):
-#     """ Default logging
-#
-#     """
-#     if not message:
-#         logging.info('')
-#     else:
-#         if module:
-#             if log_type is INFO:
-#                 logging.info('[{}] {}'.format(module, message))
-#             if log_type is DEBUG:
-#                 logging.debug('[{}] {}'.format(module, message))
-#             if log_type is ERROR:
-#                 logging.error('[{}] {}'.format(module, message))
-#             if log_type is WARNING:
-#                 logging.warning('[{}] {}'.format(module, message))
-#         else:
-#             logging.info('{}'.format(message))
-
-
-# def hevlog(message=None, module=None, log_type=None):
-#     """ Default HEV logging
-#
-#     """
-#     if not message:
-#         logging.info('')
-#     else:
-#         if module:
-#             if log_type is INFO:
-#                 logging.info('[{}] {}'.format(module, message))
-#             if log_type is DEBUG:
-#                 logging.debug('[{}] {}'.format(module, message))
-#             if log_type is ERROR:
-#                 logging.error('[{}] {}'.format(module, message))
-#             if log_type is WARNING:
-#                 logging.warning('[{}] {}'.format(module, message))
-#         else:
-#             logging.info('{}'.format(message))
-
-
 class hevlog:
 
     def __init__(self, level='info'):
+        """ HEV logging class
+
+        Centralizing all logging capabilities
+        """
+
+        # Set logger format
+        # FORMAT = '%(asctime)s %(levelname)s %(threadName)s %(module)s  %(message)s'
+        # FORMAT = '[%(asctime)s][%(levelname)s ][%(threadName)s] [%(module)s] %(message)s'
+        # FORMAT = '%(asctime)s [%(levelname)s ] %(message)s'
+        FORMAT = '[%(levelname)s ] %(message)s'
+
         self.logging = logging
-        self.format = '[%(levelname)s ] %(message)s'
         if level.lower() == 'info':
-            self.logging.basicConfig(format=self.format, level=INFO)
+            self.logging.basicConfig(format=FORMAT, level=INFO)
         if level.lower() == 'debug':
-            self.logging.basicConfig(format=self.format, level=DEBUG)
+            self.logging.basicConfig(format=FORMAT, level=DEBUG)
         if level.lower() == 'warning':
-            self.logging.basicConfig(format=self.format, level=WARNING)
+            self.logging.basicConfig(format=FORMAT, level=WARNING)
         if level.lower() == 'error':
-            self.logging.basicConfig(format=self.format, level=ERROR)
+            self.logging.basicConfig(format=FORMAT, level=ERROR)
         self.INFO = INFO
         self.DEBUG = DEBUG
         self.ERROR = ERROR

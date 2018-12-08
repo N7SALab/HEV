@@ -63,7 +63,7 @@ def bootstrap():
 if __name__ == "__main__":
     jobs= []
 
-    jobs.append(Process(target=api.statichev()))
+    jobs.append(Process(target=api.statichev(CONF)))
     # jobs.append(Process(target=bootstrap()))
 
     for j in jobs:

@@ -13,17 +13,19 @@ from flask import (Flask, request, redirect, render_template)
 
 from core.helpers.log import hevlog
 from core.helpers.crypto import secret
-from core.helpers.neo4j.cypher import neo4j_wrapper
+from core.helpers.neo4j.helpers import neo4j_wrapper
 
 from core.helpers import flask as f
 
 
 hevlog = hevlog(level='debug')
 
-try:
-    CONF = json.load(open('/var/www/hev.conf'))
-except:
-    CONF = json.load(open('hev.conf'))
+# depreciated in 0.0.1
+# removed 0.0.5
+# try:
+#     CONF = json.load(open('/var/www/hev.conf'))
+# except:
+#     CONF = json.load(open('hev.conf'))
 
 
 # Initializing app
@@ -37,10 +39,6 @@ login_manager = f.login_manager_wrapper(app)
 @login_manager.user_loader
 def load_user(user_id):
     return f.load_user(user_id)
-
-
-# Neo4j
-n = neo4j_wrapper(CONF)
 
 
 @app.route('/', methods=['GET'])
@@ -82,7 +80,7 @@ def login():
 
     title = 'Hunt Everything'
 
-    authenticated, error = login(request)
+    authenticated, error = f.login(request)
 
     if authenticated:
 
@@ -114,7 +112,11 @@ async def hev():
     app.run(host='0.0.0.0', port=8080)
 
 
-def statichev():
+def statichev(CONF):
+    # Neo4j
+    global n
+    n = neo4j_wrapper(CONF)
+
     # this doesn't work as expected
     hevlog.log('HEV is starting')
 
@@ -123,4 +125,10 @@ def statichev():
 
 
 if __name__ == "__main__":
-    statichev()
+
+    try:
+        CONF = json.load(open('/var/www/hev.conf'))
+    except:
+        CONF = json.load(open('hev.conf'))
+
+    statichev(CONF)

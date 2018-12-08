@@ -105,7 +105,7 @@ def login(request):
         elif bcrypt.checkpw(password, credentials[username]):
 
             # Authenticate session
-            user = UserMixin()
+            user = UserMloginixin()
             user.id = username  # id == user_id
 
             login_user(user, remember=remember, force=force)

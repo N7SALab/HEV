@@ -1,4 +1,4 @@
-from core.helpers.neo4j import cypher
+from core.helpers.neo4j import helpers
 
 
 def http_header(headers):
@@ -11,4 +11,4 @@ def http_header(headers):
         label='Headers'
     )
 
-    cypher.prepare_dict(**args)
+    helpers.prepare_dict(**args)

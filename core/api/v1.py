@@ -8,17 +8,17 @@ __version__ = '0.0.1'
 
 import time
 import json
-import asyncio
 
 from flask import (Flask, request, redirect, render_template)
 
-from run_HEV import bootstrap
-
-from core.helpers.log import log
-from core.helpers.flask import config, auth
+from core.helpers.log import hevlog
 from core.helpers.crypto import secret
 from core.helpers.neo4j.cypher import neo4j_wrapper
 
+from core.helpers import flask as f
+
+
+hevlog = hevlog(level='debug')
 
 try:
     CONF = json.load(open('/var/www/hev.conf'))
@@ -29,14 +29,14 @@ except:
 # Initializing app
 app = Flask(__name__, template_folder='../../web/templates', static_folder='../../web/static')
 app.secret_key = secret.new_secret_key()
-app.jinja_options = config.javascript_compatibility(app)
+app.jinja_options = f.javascript_compatibility(app)
 
 
 # User Management
-login_manager = auth.login_manager_wrapper(app)
+login_manager = f.login_manager_wrapper(app)
 @login_manager.user_loader
 def load_user(user_id):
-    return auth.load_user(user_id)
+    return f.load_user(user_id)
 
 
 # Neo4j
@@ -47,15 +47,15 @@ n = neo4j_wrapper(CONF)
 def home(**args):
     """ Default home route
     """
-    log('request: {}'.format(request))
+    hevlog.log('request: {}'.format(request))
 
     # process and send headers
     try:
-        real_ip = auth.request_headers(request)['X-Real-IP']
-        headers = dict(auth.request_headers(request))
+        real_ip = f.request_headers(request)['X-Real-IP']
+        headers = dict(f.request_headers(request))
         headers['Host'] = real_ip
     except:
-        headers = dict(auth.request_headers(request))
+        headers = dict(f.request_headers(request))
     host = json.dumps(headers['Host'])
     for key in headers.keys():
         value = json.dumps(headers[key])
@@ -69,7 +69,7 @@ def home(**args):
 
     start = time.time()
 
-    authenticated, error = auth.login(request)
+    authenticated, error = f.login(request)
 
     return render_template('home.html', **locals()), print('Flask routing took:', time.time() - start)
 
@@ -78,11 +78,11 @@ def home(**args):
 def login():
     """ User login page
     """
-    log('request: {}'.format(request))
+    hevlog.log('request: {}'.format(request))
 
     title = 'Hunt Everything'
 
-    authenticated, error = auth.login(request)
+    authenticated, error = login(request)
 
     if authenticated:
 
@@ -99,16 +99,16 @@ def logout():
 
     :return: executes flask_login.logout_user in browser session
     """
-    log('request: {}'.format(request))
+    hevlog.log('request: {}'.format(request))
 
-    auth.logout()
+    logout()
 
     return redirect('/')
 
 
 async def hev():
     # this doesn't work as expected
-    log('HEV is starting')
+    hevlog.log('HEV is starting')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)
@@ -116,7 +116,7 @@ async def hev():
 
 def statichev():
     # this doesn't work as expected
-    log('HEV is starting')
+    hevlog.log('HEV is starting')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)

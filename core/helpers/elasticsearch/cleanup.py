@@ -1,10 +1,12 @@
 import datetime
 import elasticsearch
 
-from logging import DEBUG, INFO, ERROR
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
 from core.helpers.log import hevlog
+
+
+hevlog = hevlog(level='debug')
 
 
 class ElasticsearchConnect:
@@ -41,12 +43,12 @@ class ElasticsearchConnect:
 
             msg = 'Search found {} indices'
             msg = msg.format(num_indices)
-            hevlog(msg, __name__, INFO)
+            hevlog.log(msg, __name__, 'info')
             return retrieved_indices
         except elasticsearch.exceptions.NotFoundError:
             msg = '''You provided the index pattern '{}', but searches returned fruitless'''
             msg = msg.format(index_pattern)
-            hevlog(msg, __name__, ERROR)
+            hevlog.log(msg, __name__, 'error')
 
     def delete_indices(self, index_pattern):
 
@@ -55,7 +57,7 @@ class ElasticsearchConnect:
 
         msg = 'Search found {} indices'
         msg = msg.format(num_indices)
-        hevlog(msg, __name__, INFO)
+        hevlog.log(msg, __name__, 'info')
 
         if not num_indices:
             msg = '''No indices found. exiting'''
@@ -100,17 +102,14 @@ class ElasticsearchConnect:
         self.indices = retrieved_indices
         msg = 'Retrieved {} indices'
         msg = msg.format(num_indices)
-        hevlog(msg, __name__, INFO)
+        hevlog.log(msg, __name__, 'info')
 
 
 async def run(event_loop, CONF):
     es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
 
-    hevlog(es.wrapper.info(), __name__, DEBUG)
-    hevlog(es.get_indices(), __name__, DEBUG)
-
-    # logging.debug(es.wrapper.info())
-    # logging.info(es.get_indices())
+    hevlog.log(es.wrapper.info(), __name__, 'debug')
+    hevlog.log(es.get_indices(), __name__, 'debug')
 
     DAYS = 30
 

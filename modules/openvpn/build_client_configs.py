@@ -111,13 +111,13 @@ class ClientConfig:
         return filename, io.BytesIO(config.encode()), len(config)
 
 
-async def list_objects(minioClient, bucket, folder, recursive=True):
+def list_objects(minioClient, bucket, folder, recursive=True):
     """ List Minio objects
     """
     return minioClient.list_objects_v2(bucket, folder, recursive=recursive)
 
 
-async def collector(minioClient, bucket, folder):
+def collector(minioClient, bucket, folder):
     """ Collect required files to build an OpenVPN client
     """
     hevlog.log('Collecting all Minio bucket files', collector.__name__)
@@ -127,49 +127,49 @@ async def collector(minioClient, bucket, folder):
     key = []
     ta = None
 
-    for file in await list_objects(minioClient, bucket, folder):
+    for file in list_objects(minioClient, bucket, folder):
 
         file_path, file_name = os.path.split(file.object_name)
         folder = file_path.split('/')[-1]
 
         if file_name == 'ca.crt':
-            download = await downloader(minioClient, bucket, file)
+            download = downloader(minioClient, bucket, file)
             data = download.data
             ca = data
 
         if file_name == 'ta.key':
-            download = await downloader(minioClient, bucket, file)
+            download = downloader(minioClient, bucket, file)
             data = download.data
             ta = data
 
         if folder == 'issued':
-            download = await downloader(minioClient, bucket, file)
+            download = downloader(minioClient, bucket, file)
             data = download.data
             cert.append((file_name, data))
 
         if folder == 'private':
-            download = await downloader(minioClient, bucket, file)
+            download = downloader(minioClient, bucket, file)
             data = download.data
             key.append((file_name, data))
 
     return ca, cert, key, ta
 
 
-async def put_object(minioClient, bucket, client_configs, config_name, config_data, config_len):
+def put_object(minioClient, bucket, client_configs, config_name, config_data, config_len):
     """ Minio object uploader
     """
     hevlog.log('Uploading: {}'.format(config_name), put_object.__name__)
     return minioClient.put_object(bucket, '{}/{}'.format(client_configs, config_name), config_data, config_len)
 
 
-async def downloader(minioClient, bucket, file):
+def downloader(minioClient, bucket, file):
     """ Minio object downloader
     """
     hevlog.log('Downloading: {}/{}'.format(bucket, file.object_name), downloader.__name__)
     return minioClient.get_object(bucket, file.object_name)
 
 
-async def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options=None):
+def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options=None):
     """ Create and upload OpenVPN Client config
     """
     for user, data in cert:
@@ -188,12 +188,12 @@ async def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts,
 
         config_name, config_data, config_len = config.build_config(prefix)
 
-        await put_object(minioClient, bucket, client_configs, config_name, config_data, config_len)
+        put_object(minioClient, bucket, client_configs, config_name, config_data, config_len)
 
         hevlog.log('OpenVPN client config uploaded: {}'.format(config_name), creator.__name__)
 
 
-async def main(CONF):
+def main(CONF):
     # Minio
     from core.helpers import minio
     minioClient = minio.Client(CONF)
@@ -216,11 +216,11 @@ async def main(CONF):
         except:
             options = None
 
-        ca, cert, key, ta = await collector(minioClient, bucket, keys)
-        await creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
+        ca, cert, key, ta = collector(minioClient, bucket, keys)
+        creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
 
     hevlog.log('Finshed building all OpenVPN clients', main.__name__)
 
 
-async def run(event_loop, CONF):
-    event_loop.create_task(main(CONF))
+def run(CONF):
+    main(CONF)

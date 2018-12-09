@@ -105,41 +105,40 @@ class ElasticsearchConnect:
         hevlog.log(msg, self.get_indices.__name__, 'info')
 
 
-async def run(event_loop, CONF):
+def run(CONF):
 
-    while True:
-        es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
+    es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
 
-        hevlog.log(es.wrapper.info(), run.__name__, 'debug')
-        hevlog.log(es.get_indices(), run.__name__, 'debug')
+    hevlog.log(es.wrapper.info(), run.__name__, 'debug')
+    hevlog.log(es.get_indices(), run.__name__, 'debug')
 
-        DAYS = 30
+    DAYS = 30
 
-        pattern = '*'
-        search = es.search_indices(pattern)
-        keys = sorted(list(search.keys()))
+    pattern = '*'
+    search = es.search_indices(pattern)
+    keys = sorted(list(search.keys()))
 
-        # ignore these indices
-        keys.remove('.kibana')
+    # ignore these indices
+    keys.remove('.kibana')
 
-        for alias in keys:
-            # indices = get_indice(es, alias)
-            indices = es.wrapper.indices.get(alias)
+    for alias in keys:
+        # indices = get_indice(es, alias)
+        indices = es.wrapper.indices.get(alias)
 
-            creation_date = indices[alias]['settings']['index']['creation_date']
-            creation_date = int(creation_date)
+        creation_date = indices[alias]['settings']['index']['creation_date']
+        creation_date = int(creation_date)
 
-            # month old
-            month = datetime.timedelta(days=DAYS)
-            today = datetime.datetime.today()
-            past = today - month
-            epoch = past - datetime.datetime.utcfromtimestamp(0)
-            delete_older = int(epoch.total_seconds()) * 1000
+        # month old
+        month = datetime.timedelta(days=DAYS)
+        today = datetime.datetime.today()
+        past = today - month
+        epoch = past - datetime.datetime.utcfromtimestamp(0)
+        delete_older = int(epoch.total_seconds()) * 1000
 
-            if creation_date < delete_older:
-                # delete index
-                # es.indices.delete(alias, ignore=[400, 404])
-                es.wrapper.indices.delete(alias)
-                print('deleted', alias)
+        if creation_date < delete_older:
+            # delete index
+            # es.indices.delete(alias, ignore=[400, 404])
+            es.wrapper.indices.delete(alias)
+            print('deleted', alias)
 
-        print('done')
+    print('done')

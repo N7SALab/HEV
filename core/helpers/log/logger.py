@@ -31,20 +31,33 @@ class hevlog:
         self.ERROR = ERROR
         self.WARNING = WARNING
 
-    def log(self, message=None, module=None, log_type=None):
+    def log(self, message, module=None, log_type=None):
         """ info, debug, error, warrning
         """
-        if message is None:
-            self.logging.info('')
+        if message is None or not message:
+            return self.logging.info('')
         else:
-            if log_type is not None:
+            if module and log_type:
                 if log_type.lower() == 'info':
-                    self.logging.info('[{}] {}'.format(module, message))
+                    return self.logging.info('[{}] {}'.format(module, message))
                 if log_type.lower() == 'debug':
-                    self.logging.debug('[{}] {}'.format(module, message))
+                    return self.logging.debug('[{}] {}'.format(module, message))
                 if log_type.lower() == 'error':
-                    self.logging.error('[{}] {}'.format(module, message))
+                    return self.logging.error('[{}] {}'.format(module, message))
                 if log_type.lower() == 'warning':
-                    self.logging.warning('[{}] {}'.format(module, message))
-            else:
-                self.logging.info('{}'.format(message))
+                    return self.logging.warning('[{}] {}'.format(module, message))
+
+            if log_type:
+                if log_type.lower() == 'info':
+                    return self.logging.info('{}'.format(message))
+                if log_type.lower() == 'debug':
+                    return self.logging.debug('{}'.format(message))
+                if log_type.lower() == 'error':
+                    return self.logging.error('{}'.format(message))
+                if log_type.lower() == 'warning':
+                    return self.logging.warning('{}'.format(message))
+
+            if module:
+                return self.logging.info('[{}] {}'.format(module, message))
+
+            return self.logging.info('{}'.format(message))

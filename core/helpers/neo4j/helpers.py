@@ -17,18 +17,18 @@ def assert_label(label):
     assert type(label) == str
 
     if type(label) != str:
-        hevlog.log('Label must be a string: {}'.format(label), __name__, 'error')
+        hevlog.log('Label must be a string: {}'.format(label), assert_label.__name__, 'error')
 
     if label:
         assert label
         if re.search('[:]', label):
             hevlog.log(''''Invalid label '{}': Remove the colon from the label'''.format(label),
-                       __name__, 'error')
+                       assert_label.__name__, 'error')
             return False
 
         if not re.search('[a-zA-Z]', label[0]):  # First letter of a label must be a letter
             hevlog.log('''Invalid label '{}': First character of Neo4j :LABEL must be a letter'''.format(label),
-                       __name__, 'error')
+                       assert_label.__name__, 'error')
             return False
         else:
             return ':`' + label + '`'  # :`Label`
@@ -53,10 +53,10 @@ class neo4j_wrapper:
         for server in servers:
             try:
                 self.driver = await self._try_connect(server)
-                hevlog.log('Connected to neo4j server: {}'.format(server), __name__, 'info')
+                hevlog.log('Connected to neo4j server: {}'.format(server), self._try_servers.__name__, 'info')
                 break
             except:
-                hevlog.log('Cannot connect to neo4j server: {}'.format(server), __name__)
+                hevlog.log('Cannot connect to neo4j server: {}'.format(server), self._try_servers.__name__)
 
         return
 
@@ -81,7 +81,7 @@ class neo4j_wrapper:
         label = assert_label(label)
 
         if label is False:
-            hevlog.log('Query not created', __name__, 'error')
+            hevlog.log('Query not created', self._create_query.__name__, 'error')
         else:
             node = 'header'
             dict_blob = self._prepare_dict(data)

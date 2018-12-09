@@ -43,12 +43,12 @@ class ElasticsearchConnect:
 
             msg = 'Search found {} indices'
             msg = msg.format(num_indices)
-            hevlog.log(msg, __name__, 'info')
+            hevlog.log(msg, self.search_indices.__name__, 'info')
             return retrieved_indices
         except elasticsearch.exceptions.NotFoundError:
             msg = '''You provided the index pattern '{}', but searches returned fruitless'''
             msg = msg.format(index_pattern)
-            hevlog.log(msg, __name__, 'error')
+            hevlog.log(msg, self.search_indices.__name__, 'error')
 
     def delete_indices(self, index_pattern):
 
@@ -57,7 +57,7 @@ class ElasticsearchConnect:
 
         msg = 'Search found {} indices'
         msg = msg.format(num_indices)
-        hevlog.log(msg, __name__, 'info')
+        hevlog.log(msg, self.delete_indices.__name__, 'info')
 
         if not num_indices:
             msg = '''No indices found. exiting'''
@@ -102,42 +102,44 @@ class ElasticsearchConnect:
         self.indices = retrieved_indices
         msg = 'Retrieved {} indices'
         msg = msg.format(num_indices)
-        hevlog.log(msg, __name__, 'info')
+        hevlog.log(msg, self.get_indices.__name__, 'info')
 
 
 async def run(event_loop, CONF):
-    es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
 
-    hevlog.log(es.wrapper.info(), __name__, 'debug')
-    hevlog.log(es.get_indices(), __name__, 'debug')
+    while True:
+        es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
 
-    DAYS = 30
+        hevlog.log(es.wrapper.info(), run.__name__, 'debug')
+        hevlog.log(es.get_indices(), run.__name__, 'debug')
 
-    pattern = '*'
-    search = es.search_indices(pattern)
-    keys = sorted(list(search.keys()))
+        DAYS = 30
 
-    # ignore these indices
-    keys.remove('.kibana')
+        pattern = '*'
+        search = es.search_indices(pattern)
+        keys = sorted(list(search.keys()))
 
-    for alias in keys:
-        # indices = get_indice(es, alias)
-        indices = es.wrapper.indices.get(alias)
+        # ignore these indices
+        keys.remove('.kibana')
 
-        creation_date = indices[alias]['settings']['index']['creation_date']
-        creation_date = int(creation_date)
+        for alias in keys:
+            # indices = get_indice(es, alias)
+            indices = es.wrapper.indices.get(alias)
 
-        # month old
-        month = datetime.timedelta(days=DAYS)
-        today = datetime.datetime.today()
-        past = today - month
-        epoch = past - datetime.datetime.utcfromtimestamp(0)
-        delete_older = int(epoch.total_seconds()) * 1000
+            creation_date = indices[alias]['settings']['index']['creation_date']
+            creation_date = int(creation_date)
 
-        if creation_date < delete_older:
-            # delete index
-            # es.indices.delete(alias, ignore=[400, 404])
-            es.wrapper.indices.delete(alias)
-            print('deleted', alias)
+            # month old
+            month = datetime.timedelta(days=DAYS)
+            today = datetime.datetime.today()
+            past = today - month
+            epoch = past - datetime.datetime.utcfromtimestamp(0)
+            delete_older = int(epoch.total_seconds()) * 1000
 
-    print('done')
+            if creation_date < delete_older:
+                # delete index
+                # es.indices.delete(alias, ignore=[400, 404])
+                es.wrapper.indices.delete(alias)
+                print('deleted', alias)
+
+        print('done')

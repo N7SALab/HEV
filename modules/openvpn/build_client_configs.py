@@ -46,7 +46,7 @@ class ClientConfig:
         </tls-auth>
         """
 
-        hevlog.log('Creating new OpenVPN client config', __name__)
+        hevlog.log('Creating new OpenVPN client config', ClientConfig.__name__)
 
         self.name = name
 
@@ -120,7 +120,7 @@ async def list_objects(minioClient, bucket, folder, recursive=True):
 async def collector(minioClient, bucket, folder):
     """ Collect required files to build an OpenVPN client
     """
-    hevlog.log('Collecting all Minio bucket files', __name__)
+    hevlog.log('Collecting all Minio bucket files', collector.__name__)
 
     ca = None
     cert = []
@@ -158,14 +158,14 @@ async def collector(minioClient, bucket, folder):
 async def put_object(minioClient, bucket, client_configs, config_name, config_data, config_len):
     """ Minio object uploader
     """
-    hevlog.log('Uploading: {}'.format(config_name), __name__)
+    hevlog.log('Uploading: {}'.format(config_name), put_object.__name__)
     return minioClient.put_object(bucket, '{}/{}'.format(client_configs, config_name), config_data, config_len)
 
 
 async def downloader(minioClient, bucket, file):
     """ Minio object downloader
     """
-    hevlog.log('Downloading: {}/{}'.format(bucket, file.object_name), __name__)
+    hevlog.log('Downloading: {}/{}'.format(bucket, file.object_name), downloader.__name__)
     return minioClient.get_object(bucket, file.object_name)
 
 
@@ -190,7 +190,7 @@ async def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts,
 
         await put_object(minioClient, bucket, client_configs, config_name, config_data, config_len)
 
-        hevlog.log('OpenVPN client config uploaded: {}'.format(config_name), __name__)
+        hevlog.log('OpenVPN client config uploaded: {}'.format(config_name), creator.__name__)
 
 
 async def main(CONF):
@@ -219,7 +219,7 @@ async def main(CONF):
         ca, cert, key, ta = await collector(minioClient, bucket, keys)
         await creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
 
-    hevlog.log('Finshed building all OpenVPN clients', __name__)
+    hevlog.log('Finshed building all OpenVPN clients', main.__name__)
 
 
 async def run(event_loop, CONF):

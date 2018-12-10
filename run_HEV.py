@@ -14,18 +14,15 @@
 __version__ = '0.0.3'
 
 import json
-import asyncio
 
-from multiprocessing import Process
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import (ThreadPoolExecutor, wait, as_completed)
-
-
-from modules import openvpn
 
 from core import api
 from core.helpers.log import hevlog
 from core.helpers import elasticsearch
+
+from modules import openvpn
 
 
 hevlog = hevlog(level='info')
@@ -37,23 +34,14 @@ except:
     CONF = json.load(open('hev.conf'))
 
 
-# TODO: add threading support
-# TODO: api needs to run in it's own thread
-def main():
-    hevlog.log('Starting', main.__name__)
-    hevlog.log('End', main.__name__)
-
-
 def bootstrap():
     hevlog.log('Starting', bootstrap.__name__)
 
     pool = ThreadPoolExecutor(4)
-    loop = asyncio.get_event_loop()
 
     futures = [
-        pool.submit(main, loop, CONF),
         pool.submit(elasticsearch.cleanup.run, CONF['config']['elasticsearch']),
-        pool.submit(openvpn.build_client_configs.run, CONF['config']['minio'])
+        pool.submit(openvpn.build_client_configs.run, CONF['config']['minio']),
     ]
 
     print(wait(futures))
@@ -62,7 +50,7 @@ def bootstrap():
 
 
 if __name__ == "__main__":
-    processPool = ProcessPoolExecutor(2)
+    processPool = ProcessPoolExecutor(4)
 
     futureProcesses = [
         processPool.submit(api.statichev, CONF),

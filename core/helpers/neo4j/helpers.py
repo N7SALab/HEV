@@ -1,9 +1,10 @@
 import re
-import asyncio
 
 from urllib.parse import urlencode
 from datetime import datetime, timezone
 from neo4j.v1 import GraphDatabase, basic_auth
+from concurrent.futures import (ThreadPoolExecutor, wait)
+
 
 from core.helpers.log import hevlog
 
@@ -36,7 +37,7 @@ def assert_label(label):
         return ''
 
 
-class neo4j_wrapper:
+class Neo4jWrapper:
     """ Neo4j wrapper
     """
 
@@ -44,24 +45,31 @@ class neo4j_wrapper:
         self.user = conf['config']['neo4j']['user']
         self.password = conf['config']['neo4j']['password']
         self.servers = conf['config']['neo4j']['servers']
+        self.driver = self._try_servers(self.servers)
 
-        # TODO: make this async
-        asyncloop = asyncio.get_event_loop()
-        asyncloop.run_until_complete(self._try_servers(self.servers))
+    def _try_servers(self, servers):
 
-    async def _try_servers(self, servers):
+        pool = ThreadPoolExecutor(len(servers))
+
+        futures = []
+
         for server in servers:
-            try:
-                self.driver = await self._try_connect(server)
-                hevlog.log('Connected to neo4j server: {}'.format(server), self._try_servers.__name__, 'info')
-                break
-            except:
-                hevlog.log('Cannot connect to neo4j server: {}'.format(server), self._try_servers.__name__)
+            futures.append(pool.submit(self._try_connect, server))
 
-        return
+        finished, pending = wait(futures)
 
-    async def _try_connect(self, server):
-        return GraphDatabase.driver(server, auth=(self.user, self.password))
+        for bolt in finished:
+            if bolt.result():
+                return bolt
+
+        return None
+
+    def _try_connect(self, server):
+
+        try:
+            return GraphDatabase.driver(server, auth=(self.user, self.password))
+        except:
+            return False
 
     def _prepare_dict(self, blob):
         """ All inputs first needs to dicts

@@ -60,7 +60,7 @@ class Neo4jWrapper:
 
         for bolt in finished:
             if bolt.result():
-                return bolt
+                return bolt.result()
 
         return None
 

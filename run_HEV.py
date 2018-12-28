@@ -25,7 +25,7 @@ from core.helpers import elasticsearch
 from modules import openvpn
 
 
-hevlog = hevlog(level='info')
+hevlog = hevlog('hev', level='debug')
 
 
 try:
@@ -35,18 +35,17 @@ except:
 
 
 def bootstrap():
-    hevlog.log('Starting', bootstrap.__name__)
+    hevlog.log('Starting', bootstrap.__name__, 'info')
 
     pool = ThreadPoolExecutor(4)
 
     futures = [
-        pool.submit(elasticsearch.cleanup.run, CONF['config']['elasticsearch']),
+        pool.submit(elasticsearch.cleanup.elasticsearch_cleaner, CONF['config']['elasticsearch']),
         pool.submit(openvpn.build_client_configs.run, CONF['config']['minio']),
     ]
 
-    print(wait(futures))
-
-    hevlog.log('End', bootstrap.__name__)
+    hevlog.log(wait(futures), bootstrap.__name__, 'debug')
+    hevlog.log('all futures exited', bootstrap.__name__, 'debug')
 
 
 if __name__ == "__main__":
@@ -56,3 +55,6 @@ if __name__ == "__main__":
         processPool.submit(api.statichev, CONF),
         processPool.submit(bootstrap),
     ]
+
+    hevlog.log(wait(futureProcesses), 'main', 'debug')
+    hevlog.log('all processes exited', 'main', 'info')

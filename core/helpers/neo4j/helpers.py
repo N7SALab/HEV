@@ -5,11 +5,10 @@ from datetime import datetime, timezone
 from neo4j.v1 import GraphDatabase, basic_auth
 from concurrent.futures import (ThreadPoolExecutor, wait)
 
-
 from core.helpers.log import hevlog
 
 
-hevlog = hevlog(level='debug')
+hevlog = hevlog('neo4j', level='info')
 
 
 def assert_label(label):

@@ -18,7 +18,8 @@ from core.helpers.neo4j.helpers import Neo4jWrapper
 from core.helpers import flask as f
 
 
-hevlog = hevlog(level='debug')
+hevlog = hevlog('hevapi', level='debug')
+
 
 # depreciated in 0.0.1
 # removed 0.0.5
@@ -45,7 +46,7 @@ def load_user(user_id):
 def home(**args):
     """ Default home route
     """
-    hevlog.log('request: {}'.format(request), home.__name__)
+    hevlog.log('request: {}'.format(request), home.__name__, 'info')
 
     # process and send headers
     try:
@@ -76,7 +77,7 @@ def home(**args):
 def login():
     """ User login page
     """
-    hevlog.log('request: {}'.format(request), login.__name__)
+    hevlog.log('request: {}'.format(request), login.__name__, 'info')
 
     title = 'Hunt Everything'
 
@@ -97,7 +98,7 @@ def logout():
 
     :return: executes flask_login.logout_user in browser session
     """
-    hevlog.log('request: {}'.format(request), logout.__name__)
+    hevlog.log('request: {}'.format(request), logout.__name__, 'info')
 
     logout()
 
@@ -106,7 +107,7 @@ def logout():
 
 async def hev():
     # this doesn't work as expected
-    hevlog.log('HEV is starting', hev.__name__)
+    hevlog.log('HEV is starting', hev.__name__, 'info')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)
@@ -117,7 +118,7 @@ def statichev(CONF):
     global n
     n = Neo4jWrapper(CONF)
 
-    hevlog.log('HEV is starting', statichev.__name__)
+    hevlog.log('HEV is starting', statichev.__name__, 'info')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)

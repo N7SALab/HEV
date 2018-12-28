@@ -1,11 +1,10 @@
 import os
 import io
 
-from minio import Minio
-
+from core.helpers import minio
 from core.helpers.log import hevlog
 
-hevlog = hevlog(level='debug')
+hevlog = hevlog('openvpn', level='error')
 
 
 class ClientConfig:
@@ -46,7 +45,7 @@ class ClientConfig:
         </tls-auth>
         """
 
-        hevlog.log('Creating new OpenVPN client config', ClientConfig.__name__)
+        hevlog.log('Creating new OpenVPN client config', ClientConfig.__name__, 'debug')
 
         self.name = name
 
@@ -120,7 +119,7 @@ def list_objects(minioClient, bucket, folder, recursive=True):
 def collector(minioClient, bucket, folder):
     """ Collect required files to build an OpenVPN client
     """
-    hevlog.log('Collecting all Minio bucket files', collector.__name__)
+    hevlog.log('Collecting all Minio bucket files', collector.__name__, 'debug')
 
     ca = None
     cert = []
@@ -158,14 +157,14 @@ def collector(minioClient, bucket, folder):
 def put_object(minioClient, bucket, client_configs, config_name, config_data, config_len):
     """ Minio object uploader
     """
-    hevlog.log('Uploading: {}'.format(config_name), put_object.__name__)
+    hevlog.log('Uploading: {}'.format(config_name), put_object.__name__, 'debug')
     return minioClient.put_object(bucket, '{}/{}'.format(client_configs, config_name), config_data, config_len)
 
 
 def downloader(minioClient, bucket, file):
     """ Minio object downloader
     """
-    hevlog.log('Downloading: {}/{}'.format(bucket, file.object_name), downloader.__name__)
+    hevlog.log('Downloading: {}/{}'.format(bucket, file.object_name), downloader.__name__, 'debug')
     return minioClient.get_object(bucket, file.object_name)
 
 
@@ -190,12 +189,10 @@ def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefi
 
         put_object(minioClient, bucket, client_configs, config_name, config_data, config_len)
 
-        hevlog.log('OpenVPN client config uploaded: {}'.format(config_name), creator.__name__)
+        hevlog.log('OpenVPN client config uploaded: {}'.format(config_name), creator.__name__, 'debug')
 
 
 def main(CONF):
-    # Minio
-    from core.helpers import minio
     minioClient = minio.Client(CONF)
 
     bucket = CONF['bucket']
@@ -219,8 +216,15 @@ def main(CONF):
         ca, cert, key, ta = collector(minioClient, bucket, keys)
         creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
 
-    hevlog.log('Finshed building all OpenVPN clients', main.__name__)
+    hevlog.log('Finshed building all OpenVPN clients', main.__name__, 'debug')
 
 
 def run(CONF):
-    main(CONF)
+
+    from core.helpers.sleep import sleeper
+
+    while True:
+        main(CONF)
+
+        hevlog.log('sleeping', ClientConfig.__name__, 'debug')
+        sleeper.day('openvpn')

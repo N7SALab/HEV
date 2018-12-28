@@ -4,19 +4,25 @@ import elasticsearch
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
 from core.helpers.log import hevlog
+from core.helpers.sleep import sleeper
 
 
-hevlog = hevlog(level='debug')
+hevlog = hevlog('elasticsearch', level='info')
 
 
 class ElasticsearchConnect:
 
+    # TODO: move port into configuration file
     def __init__(self, host=['elasticsearch'], port=9200, request_timeout=10,
                  http_auth=None, use_ssl=True, verify_certs=True,
                  connection_class=RequestsHttpConnection):
+
+        if host == list():
+            hevlog.log('No elasticsearch hosts given', ElasticsearchConnect.__name__, 'error')
+            raise Exception('No elasticsearch hosts given')
+
         for _host in host:
             try:
-                # TODO: maybe make this accept only one host
                 self.wrapper = Elasticsearch(
                     hosts=[{'host': _host, 'port': port}],
                     request_timeout=request_timeout,
@@ -25,10 +31,12 @@ class ElasticsearchConnect:
                     verify_certs=verify_certs,
                     connection_class=connection_class
                 )
+                break
             except:
                 self.wrapper = None
             finally:
                 if self.wrapper is None:
+                    hevlog.log('No elasticsearch hosts available', ElasticsearchConnect.__name__, 'error')
                     raise Exception('No elasticsearch hosts available')
 
         self.host = host
@@ -41,8 +49,7 @@ class ElasticsearchConnect:
             retrieved_indices = self.wrapper.indices.get(index_pattern)
             num_indices = len(retrieved_indices)
 
-            msg = 'Search found {} indices'
-            msg = msg.format(num_indices)
+            msg = 'Search found {} indices'.format(num_indices)
             hevlog.log(msg, self.search_indices.__name__, 'info')
             return retrieved_indices
         except elasticsearch.exceptions.NotFoundError:
@@ -55,8 +62,7 @@ class ElasticsearchConnect:
         retrieved_indices = [x for x in self.search_indices(index_pattern).keys()]
         num_indices = len(retrieved_indices)
 
-        msg = 'Search found {} indices'
-        msg = msg.format(num_indices)
+        msg = 'Search found {} indices'.format(num_indices)
         hevlog.log(msg, self.delete_indices.__name__, 'info')
 
         if not num_indices:
@@ -100,45 +106,49 @@ class ElasticsearchConnect:
         num_indices = len(retrieved_indices)
 
         self.indices = retrieved_indices
-        msg = 'Retrieved {} indices'
-        msg = msg.format(num_indices)
-        hevlog.log(msg, self.get_indices.__name__, 'info')
+        msg = 'Retrieved {} indices'.format(num_indices)
+        hevlog.log(msg, self.get_indices.__name__, 'debug')
 
 
-def run(CONF):
+def elasticsearch_cleaner(CONF):
 
-    es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
+    # TODO: this might create too many connections to elasticsearch
+    while True:
 
-    hevlog.log(es.wrapper.info(), run.__name__, 'debug')
-    hevlog.log(es.get_indices(), run.__name__, 'debug')
+        es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
 
-    DAYS = 30
+        hevlog.log(es.wrapper.info(), elasticsearch_cleaner.__name__, 'debug')
+        hevlog.log(es.get_indices(), elasticsearch_cleaner.__name__, 'debug')
 
-    pattern = '*'
-    search = es.search_indices(pattern)
-    keys = sorted(list(search.keys()))
+        DAYS = 30
 
-    # ignore these indices
-    keys.remove('.kibana')
+        pattern = '*'
+        search = es.search_indices(pattern)
+        keys = sorted(list(search.keys()))
 
-    for alias in keys:
-        # indices = get_indice(es, alias)
-        indices = es.wrapper.indices.get(alias)
+        # ignore these indices
+        keys.remove('.kibana')
 
-        creation_date = indices[alias]['settings']['index']['creation_date']
-        creation_date = int(creation_date)
+        for alias in keys:
+            # indices = get_indice(es, alias)
+            indices = es.wrapper.indices.get(alias)
 
-        # month old
-        month = datetime.timedelta(days=DAYS)
-        today = datetime.datetime.today()
-        past = today - month
-        epoch = past - datetime.datetime.utcfromtimestamp(0)
-        delete_older = int(epoch.total_seconds()) * 1000
+            creation_date = indices[alias]['settings']['index']['creation_date']
+            creation_date = int(creation_date)
 
-        if creation_date < delete_older:
-            # delete index
-            # es.indices.delete(alias, ignore=[400, 404])
-            es.wrapper.indices.delete(alias)
-            print('deleted', alias)
+            # month old
+            month = datetime.timedelta(days=DAYS)
+            today = datetime.datetime.today()
+            past = today - month
+            epoch = past - datetime.datetime.utcfromtimestamp(0)
+            delete_older = int(epoch.total_seconds()) * 1000
 
-    print('done')
+            if creation_date < delete_older:
+                # delete index
+                # es.indices.delete(alias, ignore=[400, 404])
+                es.wrapper.indices.delete(alias)
+                hevlog.log('deleted {}'.format(alias), elasticsearch_cleaner.__name__, 'info')
+
+        hevlog.log('done', ElasticsearchConnect.__name__, 'info')
+        hevlog.log('sleeping', ElasticsearchConnect.__name__, 'debug')
+        sleeper.day('elasticsearch cleanup')

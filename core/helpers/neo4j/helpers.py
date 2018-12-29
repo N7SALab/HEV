@@ -17,18 +17,16 @@ def assert_label(label):
     assert type(label) == str
 
     if type(label) != str:
-        hevlog.log('Label must be a string: {}'.format(label), assert_label.__name__, 'error')
+        hevlog.logging.error('[assert_label] Label must be a string: {}'.format(label))
 
     if label:
         assert label
         if re.search('[:]', label):
-            hevlog.log(''''Invalid label '{}': Remove the colon from the label'''.format(label),
-                       assert_label.__name__, 'error')
+            hevlog.logging.error(''''[assert_label] Invalid label '{}': Remove the colon from the label'''.format(label))
             return False
 
         if not re.search('[a-zA-Z]', label[0]):  # First letter of a label must be a letter
-            hevlog.log('''Invalid label '{}': First character of Neo4j :LABEL must be a letter'''.format(label),
-                       assert_label.__name__, 'error')
+            hevlog.logging.error('''[assert_label] Invalid label '{}': First character of Neo4j :LABEL must be a letter'''.format(label))
             return False
         else:
             return ':`' + label + '`'  # :`Label`
@@ -88,7 +86,7 @@ class Neo4jWrapper:
         label = assert_label(label)
 
         if label is False:
-            hevlog.log('Query not created', self._create_query.__name__, 'error')
+            hevlog.logging.error('[_create_query] Query not created')
         else:
             node = 'header'
             dict_blob = self._prepare_dict(data)
@@ -123,8 +121,8 @@ class Neo4jWrapper:
         with self.driver.session() as session:
             results = session.run(cypher)
 
-        hevlog.log('Cypher: {}'.format(cypher), 'debug')
-        hevlog.log('Results: {}'.format(results), 'debug')
+        hevlog.logging.debug('[send] Cypher: {}'.format(cypher))
+        hevlog.logging.debug('[send] Results: {}'.format(results))
 
         return results
 
@@ -134,18 +132,18 @@ class Neo4jWrapper:
         query = self._create_query(label, data)
         final_cypher = self._consolidate(query)  # self._consolidate sets of queries into one single related query
 
-        hevlog.log(final_cypher, 'debug')
+        hevlog.logging.debug('[send data] {}'.format(final_cypher))
 
         return self._send(final_cypher)
 
     def create_node(self, cypher):
         """ Create node
         """
-        hevlog.log(cypher, 'debug')
+        hevlog.logging.debug('[create node] {}'.format(cypher))
         return self._send(cypher)
 
     def create_relationship(self, cypher):
         """ Create relationship
         """
-        hevlog.log(cypher, 'debug')
+        hevlog.logging.debug('[create relationship] {}'.format(cypher))
         return self._send(cypher)

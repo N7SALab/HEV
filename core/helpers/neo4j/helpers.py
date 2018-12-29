@@ -8,7 +8,7 @@ from concurrent.futures import (ThreadPoolExecutor, wait)
 from core.helpers.log import hevlog
 
 
-hevlog = hevlog('neo4j', level='info')
+hevlog = hevlog('neo4j', level='debug')
 
 
 def assert_label(label):

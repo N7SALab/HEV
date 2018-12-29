@@ -47,6 +47,7 @@ def home(**args):
     """ Default home route
     """
     hevlog.logging.info('[home] request: {}'.format(request))
+    start = time.time()
 
     # process and send headers
     try:
@@ -66,11 +67,11 @@ def home(**args):
             cypher += 'MERGE (host)-[:`Has header`]->(header)'
             n.create_relationship(cypher)
 
-    start = time.time()
-
     authenticated, error = f.login(request)
 
-    return render_template('home.html', **locals()), print('Flask routing took:', time.time() - start)
+    hevlog.logging.debug('[home] Flask routing took: {}'.format(time.time() - start))
+
+    return render_template('home.html', **locals())
 
 
 @app.route('/authenticate', methods=['GET', 'POST'])

@@ -18,7 +18,7 @@ class ElasticsearchConnect:
                  connection_class=RequestsHttpConnection):
 
         if host == list():
-            hevlog.log('No elasticsearch hosts given', ElasticsearchConnect.__name__, 'error')
+            hevlog.logging.error('No elasticsearch hosts given')
             raise Exception('No elasticsearch hosts given')
 
         for _host in host:
@@ -36,7 +36,7 @@ class ElasticsearchConnect:
                 self.wrapper = None
             finally:
                 if self.wrapper is None:
-                    hevlog.log('No elasticsearch hosts available', ElasticsearchConnect.__name__, 'error')
+                    hevlog.logging.error('No elasticsearch hosts available')
                     raise Exception('No elasticsearch hosts available')
 
         self.host = host
@@ -50,12 +50,12 @@ class ElasticsearchConnect:
             num_indices = len(retrieved_indices)
 
             msg = 'Search found {} indices'.format(num_indices)
-            hevlog.log(msg, self.search_indices.__name__, 'info')
+            hevlog.logging.info('[search indices] {}'.format(msg))
             return retrieved_indices
         except elasticsearch.exceptions.NotFoundError:
             msg = '''You provided the index pattern '{}', but searches returned fruitless'''
             msg = msg.format(index_pattern)
-            hevlog.log(msg, self.search_indices.__name__, 'error')
+            hevlog.logging.error('[search indices] {}'.format(msg))
 
     def delete_indices(self, index_pattern):
 
@@ -63,7 +63,7 @@ class ElasticsearchConnect:
         num_indices = len(retrieved_indices)
 
         msg = 'Search found {} indices'.format(num_indices)
-        hevlog.log(msg, self.delete_indices.__name__, 'info')
+        hevlog.logging.info('[delete indices] {}'.foramt(msg))
 
         if not num_indices:
             msg = '''No indices found. exiting'''
@@ -107,7 +107,7 @@ class ElasticsearchConnect:
 
         self.indices = retrieved_indices
         msg = 'Retrieved {} indices'.format(num_indices)
-        hevlog.log(msg, self.get_indices.__name__, 'debug')
+        hevlog.logging.debug('[get indices] {}'.format(msg))
 
 
 def elasticsearch_cleaner(CONF):
@@ -117,8 +117,8 @@ def elasticsearch_cleaner(CONF):
 
         es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
 
-        hevlog.log(es.wrapper.info(), elasticsearch_cleaner.__name__, 'debug')
-        hevlog.log(es.get_indices(), elasticsearch_cleaner.__name__, 'debug')
+        hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.wrapper.info()))
+        hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.get_indices()))
 
         DAYS = 30
 
@@ -147,8 +147,8 @@ def elasticsearch_cleaner(CONF):
                 # delete index
                 # es.indices.delete(alias, ignore=[400, 404])
                 es.wrapper.indices.delete(alias)
-                hevlog.log('deleted {}'.format(alias), elasticsearch_cleaner.__name__, 'info')
+                hevlog.logging.info('[elasticsearch cleaner] deleted {}'.format(alias))
 
-        hevlog.log('done', ElasticsearchConnect.__name__, 'info')
-        hevlog.log('sleeping', ElasticsearchConnect.__name__, 'debug')
+        hevlog.logging.info('[ElasticsearchConnect] done')
+        hevlog.logging.debug('[ElasticsearchConnect] sleeping')
         sleeper.day('elasticsearch cleanup')

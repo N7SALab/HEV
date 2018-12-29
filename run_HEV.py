@@ -35,7 +35,7 @@ except:
 
 
 def bootstrap():
-    hevlog.log('Starting', bootstrap.__name__, 'info')
+    hevlog.logging.info('[bootstrap] Starting')
 
     pool = ThreadPoolExecutor(4)
 
@@ -44,8 +44,8 @@ def bootstrap():
         pool.submit(openvpn.build_client_configs.run, CONF['config']['minio']),
     ]
 
-    hevlog.log(wait(futures), bootstrap.__name__, 'debug')
-    hevlog.log('all futures exited', bootstrap.__name__, 'debug')
+    hevlog.logging.debug('[bootstrap] {}'.format(wait(futures)))
+    hevlog.logging.debug('[bootstrap] all futures exited')
 
 
 if __name__ == "__main__":
@@ -56,5 +56,5 @@ if __name__ == "__main__":
         processPool.submit(bootstrap),
     ]
 
-    hevlog.log(wait(futureProcesses), 'main', 'debug')
-    hevlog.log('all processes exited', 'main', 'info')
+    hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
+    hevlog.logging.debug('[main] all processes exited')

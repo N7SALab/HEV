@@ -105,7 +105,7 @@ def login(request):
         elif bcrypt.checkpw(password, credentials[username]):
 
             # Authenticate session
-            user = UserMloginixin()
+            user = UserMixin()
             user.id = username  # id == user_id
 
             login_user(user, remember=remember, force=force)
@@ -120,7 +120,7 @@ def login(request):
 def fresh():
     """ Returns True if the user login is fresh
 
-    :return: Is the current loging fresh?
+    Is the current login fresh?
     """
     return login_fresh()
 
@@ -134,7 +134,7 @@ def logout():
 def logged_in():
     """ If the user is logged in return True, otherwise return False
 
-    :return: True if logged in; False if not logged in
+    True if logged in; False if not logged in
     """
 
     if current_user.is_authenticated:
@@ -146,7 +146,7 @@ def logged_in():
 def current_user_info():
     """ Return the current_user session
 
-    :return: Current user.id from Flask.session is returned
+    Current user.id from Flask.session is returned
     """
 
     return current_user
@@ -154,17 +154,19 @@ def current_user_info():
 
 def request_headers(request):
     """ Return request headers
-
-    :return: request.headers
     """
 
-    return request.headers
+    try:
+        real_ip = request['X-Real-IP']
+        headers = request
+        headers['Host'] = real_ip
+        return dict(request.headers)
+    except:
+        return dict(request.headers)
 
 
 def request_environ(request):
     """ Return request headers
-
-    :return: request.environ
     """
 
-    return request.environ
+    return dict(request.environ)

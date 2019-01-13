@@ -21,14 +21,6 @@ from core.helpers import flask as f
 hevlog = hevlog('hevapi', level='debug')
 
 
-# depreciated in 0.0.1
-# removed 0.0.5
-# try:
-#     CONF = json.load(open('/var/www/hev.conf'))
-# except:
-#     CONF = json.load(open('hev.conf'))
-
-
 # Initializing app
 app = Flask(__name__, template_folder='../../web/templates', static_folder='../../web/static')
 app.secret_key = secret.new_secret_key()
@@ -47,16 +39,13 @@ def home(**args):
     """ Default home route
     """
     hevlog.logging.info('[home] request: {}'.format(request))
-    start = time.time()
+    start = int(time.time())
 
     # process and send headers
-    try:
-        real_ip = f.request_headers(request)['X-Real-IP']
-        headers = dict(f.request_headers(request))
-        headers['Host'] = real_ip
-    except:
-        headers = dict(f.request_headers(request))
+    headers = f.request_headers(request)
+
     host = json.dumps(headers['Host'])
+
     for key in headers.keys():
         value = json.dumps(headers[key])
         data = {key: value}
@@ -69,7 +58,7 @@ def home(**args):
 
     authenticated, error = f.login(request)
 
-    hevlog.logging.debug('[home] Flask routing took: {}'.format(time.time() - start))
+    hevlog.logging.debug('[home] Flask routing took: {} seconds'.format(int(time.time()) - start))
 
     return render_template('home.html', **locals())
 
@@ -114,10 +103,10 @@ async def hev():
     app.run(host='0.0.0.0', port=8080)
 
 
-def statichev(CONF):
+def statichev(neo4j_config):
     # Neo4j
     global n
-    n = Neo4jWrapper(CONF)
+    n = Neo4jWrapper(neo4j_config)
 
     hevlog.logging.info('[statichev] HEV is starting')
 
@@ -132,4 +121,4 @@ if __name__ == "__main__":
     except:
         CONF = json.load(open('hev.conf'))
 
-    statichev(CONF)
+    statichev(CONF['neo4j'])

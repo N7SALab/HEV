@@ -7,7 +7,7 @@ from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
 
-hevlog = hevlog('elasticsearch', level='info')
+hevlog = hevlog('elasticsearch', level='error')
 
 
 class ElasticsearchConnect:

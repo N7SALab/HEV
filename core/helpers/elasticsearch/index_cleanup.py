@@ -110,12 +110,12 @@ class ElasticsearchConnect:
         hevlog.logging.debug('[get indices] {}'.format(msg))
 
 
-def elasticsearch_cleaner(CONF):
+def run(elasticsearch_config):
 
     # TODO: this might create too many connections to elasticsearch
     while True:
 
-        es = ElasticsearchConnect(CONF['hosts'], use_ssl=False, request_timeout=40)
+        es = ElasticsearchConnect(elasticsearch_config['hosts'], use_ssl=False, request_timeout=40)
 
         hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.wrapper.info()))
         hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.get_indices()))

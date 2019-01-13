@@ -1,2 +1,2 @@
 from .helpers import *
-from .cleanup import *
+from .index_cleanup import *

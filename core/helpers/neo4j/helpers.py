@@ -8,7 +8,7 @@ from concurrent.futures import (ThreadPoolExecutor, wait)
 from core.helpers.log import hevlog
 
 
-hevlog = hevlog('neo4j', level='debug')
+hevlog = hevlog('neo4j', level='error')
 
 
 def assert_label(label):
@@ -38,10 +38,10 @@ class Neo4jWrapper:
     """ Neo4j wrapper
     """
 
-    def __init__(self, conf):
-        self.user = conf['config']['neo4j']['user']
-        self.password = conf['config']['neo4j']['password']
-        self.servers = conf['config']['neo4j']['servers']
+    def __init__(self, neo4j_config):
+        self.user = neo4j_config['user']
+        self.password = neo4j_config['password']
+        self.servers = neo4j_config['servers']
         self.driver = self._try_servers(self.servers)
 
     def _try_servers(self, servers):

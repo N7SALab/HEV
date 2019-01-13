@@ -1,20 +1,25 @@
 {
-"config": {
-    "neo4j": {
-        "user": "neo4j",
-        "password": "",
-        "servers": ["bolt://neo4j:7687", ""]
+"elasticsearch": {
+    "hosts": []
+    },
+"neo4j": {
+    "user": "neo4j",
+    "password": "",
+    "servers": ["bolt://neo4j:7687", ""]
+    },
+"minio": {
+    "host": "minio:9000",
+    "access_key": "",
+    "secret_key": "",
+    "bucket": "",
+    "folder": "",
+    "client_configs": ""
+    },
+"instagram": {
+    "login": {
+        "account": "",
+        "password": ""
         },
-    "elasticsearch": {
-        "hosts": []
-        },
-    "minio": {
-        "host": "minio:9000",
-        "access_key": "",
-        "secret_key": "",
-        "bucket": "",
-        "folder": "",
-        "client_configs": ""
-        }
+    "following": []
     }
 }

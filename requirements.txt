@@ -1,10 +1,11 @@
-psutil
-pytz
-minio
-neo4j-driver
+bcrypt
 elasticsearch
 Flask
 Flask-WTF
 Flask-Login
+minio
+neo4j-driver
+psutil
+pytz
 requests
-bcrypt
+selenium

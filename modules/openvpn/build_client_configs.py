@@ -3,6 +3,7 @@ import io
 
 from core.helpers import minio
 from core.helpers.log import hevlog
+from core.helpers.sleep import sleeper
 
 hevlog = hevlog('openvpn', level='error')
 
@@ -192,39 +193,31 @@ def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefi
         hevlog.logging.debug('[creator] OpenVPN client config uploaded: {}'.format(config_name))
 
 
-def main(CONF):
-    minioClient = minio.Client(CONF)
-
-    bucket = CONF['bucket']
-
-    openvpn_configs = CONF['openvpn']
-
-    for config in openvpn_configs:
-        hosts = config['hosts']
-        folder = config['folder']
-        keys = folder + '/pki'
-        client_configs = folder + '/configs'
-        try:
-            prefix = config['prefix']
-        except:
-            prefix = None
-        try:
-            options = config['options']
-        except:
-            options = None
-
-        ca, cert, key, ta = collector(minioClient, bucket, keys)
-        creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
-
-    hevlog.logging.debug('[main] Finshed building all OpenVPN clients')
-
-
-def run(CONF):
-
-    from core.helpers.sleep import sleeper
+def run(minio_config):
 
     while True:
-        main(CONF)
+        minioClient = minio.Client(minio_config)
 
+        minio_bucket = minio_config['bucket']
+        openvpn_configs = minio_config['openvpn']
+
+        for config in openvpn_configs:
+            hosts = config['hosts']
+            folder = config['folder']
+            keys = folder + '/pki'
+            client_configs = folder + '/configs'
+            try:
+                prefix = config['prefix']
+            except:
+                prefix = None
+            try:
+                options = config['options']
+            except:
+                options = None
+
+            ca, cert, key, ta = collector(minioClient, minio_bucket, keys)
+            creator(minioClient, minio_bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
+
+        hevlog.logging.debug('[build client configs] Finshed building all OpenVPN clients')
         hevlog.logging.debug('[ClientConfig] sleeping')
         sleeper.day('openvpn')

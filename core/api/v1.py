@@ -117,7 +117,7 @@ def statichev(neo4j_config):
 if __name__ == "__main__":
 
     try:
-        CONF = json.load(open('/var/www/hev.conf'))
+        CONF = json.load(open('../../hev.conf'))
     except:
         CONF = json.load(open('hev.conf'))
 

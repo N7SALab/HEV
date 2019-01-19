@@ -47,7 +47,10 @@ def bootstrap():
         pool.submit(instagram.run, CONF['instagram']),
     ]
 
-    hevlog.logging.debug('[bootstrap] {}'.format(wait(futures)))
+    for future in futures:
+        hevlog.logging.debug('[bootstrap] {} {}'.format(future, future.exception()))
+
+    # hevlog.logging.debug('[bootstrap] {}'.format(wait(futures)))
     hevlog.logging.debug('[bootstrap] all futures exited')
 
 
@@ -59,5 +62,9 @@ if __name__ == "__main__":
         processPool.submit(bootstrap),
     ]
 
-    hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
+    for future in futureProcesses:
+        hevlog.logging.debug('[main] {} {}'.format(future, future.exception()))
+
+    # hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
     hevlog.logging.debug('[main] all processes exited')
+

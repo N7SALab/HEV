@@ -2,7 +2,7 @@ import re
 
 from urllib.parse import urlencode
 from datetime import datetime, timezone
-from neo4j.v1 import GraphDatabase, basic_auth
+from neo4j.v1 import GraphDatabase
 from concurrent.futures import (ThreadPoolExecutor, wait)
 
 from core.helpers.log import hevlog

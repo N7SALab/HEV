@@ -4,7 +4,7 @@ import json
 
 from minio import Minio
 
-from core.helpers.log import log
+from core.helpers import log
 
 
 try:

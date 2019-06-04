@@ -13,10 +13,9 @@ from flask import (Flask, request, redirect, render_template)
 
 from core.helpers.log import hevlog
 from core.helpers.crypto import secret
-from core.helpers.neo4j.helpers import Neo4jWrapper
+from core.helpers.neo4j import Neo4jWrapper
 
 from core.helpers import flask as f
-
 
 hevlog = hevlog('hevapi', level='debug')
 
@@ -93,6 +92,18 @@ def logout():
     logout()
 
     return redirect('/')
+
+
+# authentication required
+@app.route('/info')
+def info():
+    """ Show system information
+    """
+    return
+
+
+# authentication required
+@app.route('/dl/')
 
 
 async def hev():

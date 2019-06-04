@@ -17,15 +17,12 @@ import os
 import json
 
 from concurrent.futures import ProcessPoolExecutor
-from concurrent.futures import (ThreadPoolExecutor, wait, as_completed)
+from concurrent.futures import (ThreadPoolExecutor)
 
 from core import api
 from core.helpers.log import hevlog
-from core.helpers import elasticsearch
 
-from modules import openvpn
 from modules import instagram
-
 
 hevlog = hevlog('hev', level='debug')
 
@@ -42,8 +39,8 @@ def bootstrap():
     pool = ThreadPoolExecutor(4)
 
     futures = [
-        pool.submit(elasticsearch.index_cleanup.run, CONF['elasticsearch']),
-        pool.submit(openvpn.build_client_configs.run, CONF['minio']),
+        pool.submit(hev.core.helpers.elasticsearch.index_cleanup.run, CONF['elasticsearch']),
+        pool.submit(hev.modules.openvpn.build_client_configs.run, CONF['minio']),
         pool.submit(instagram.run, CONF['instagram']),
     ]
 

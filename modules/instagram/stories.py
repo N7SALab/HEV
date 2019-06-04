@@ -7,7 +7,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
-
 hevlog = hevlog('instagram', level='debug')
 
 

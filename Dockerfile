@@ -34,8 +34,11 @@ COPY tests tests
 COPY web web
 COPY run_HEV.py .
 COPY requirements.txt .
+COPY hev.conf .
 
 RUN pip install -r requirements.txt
+
+VOLUME "/hev/external/openvpn"
 
 # run app
 CMD ["/bin/bash"]

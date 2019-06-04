@@ -6,7 +6,6 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
-
 hevlog = hevlog('elasticsearch', level='error')
 
 

@@ -1,7 +1,5 @@
 # TODO: get pytest
 
-from logging import INFO
-
 from core.helpers.log import hevlog
 
 

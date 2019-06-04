@@ -1,3 +1,7 @@
+.idea/
+.vscode/
+hev.conf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -101,7 +105,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-# Other stuff
-.idea
-hev.conf

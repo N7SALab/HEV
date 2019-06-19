@@ -13,15 +13,16 @@ WORKDIR /tmp
 RUN driver="chromedriver.zip" \
     && wget -v -O "$driver" https://chromedriver.storage.googleapis.com/2.45/chromedriver_linux64.zip \
     && unzip -o -d /usr/local/bin chromedriver.zip \
-    && rm -f "$driver"
+    && rm -rf *
 
 # Install Chrome Browser
 RUN browser="google-chrome.deb" \
     && apt update \
     && wget -v -O "$browser" "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" \
     && dpkg -i "$browser" \
-    || apt install -f -y \
-    && rm -f "$browser"
+    && apt install -f -y \
+    && apt autoclean \
+    && rm -rf * 
 
 
 WORKDIR /hev
@@ -36,10 +37,11 @@ COPY run_HEV.py .
 COPY requirements.txt .
 COPY hev.conf .
 
-RUN pip install -r requirements.txt
+# Install python packages
+RUN python3 -m pip install -r requirements.txt
 
 VOLUME "/hev/external/openvpn"
 
 # run app
-CMD ["/bin/bash"]
 ENTRYPOINT ["python3", "run_HEV.py"]
+

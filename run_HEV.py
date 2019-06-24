@@ -39,8 +39,8 @@ def bootstrap():
     pool = ThreadPoolExecutor(4)
 
     futures = [
-        pool.submit(hev.core.helpers.elasticsearch.index_cleanup.run, CONF['elasticsearch']),
-        pool.submit(hev.modules.openvpn.build_client_configs.run, CONF['minio']),
+        pool.submit(core.helpers.elasticsearch.index_cleanup.run, CONF['elasticsearch']),
+        pool.submit(modules.openvpn.build_client_configs.run, CONF['minio']),
         pool.submit(instagram.run, CONF['instagram']),
     ]
 

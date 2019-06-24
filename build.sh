@@ -31,4 +31,3 @@ docker push $REGISTRY/$DOCKERNAME:latest
 
 # list image
 docker images $DOCKERNAME
-

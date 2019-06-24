@@ -2,14 +2,10 @@
 #
 # HEV Bootstrap Starter
 #
-#
-#
 # creator: ainiml
 # created: Thu Oct 25 12:16:49 EDT 2018
 #
-#
 # Usage: python3 run-hev.py
-#
 
 __version__ = '0.0.4'
 
@@ -19,10 +15,15 @@ import json
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import (ThreadPoolExecutor)
 
-from core import api
-from core.helpers.log import hevlog
+import core
+import modules
 
+from modules import openvpn
 from modules import instagram
+
+from core import api
+from core.helpers import elasticsearch
+from core.helpers.log import hevlog
 
 hevlog = hevlog('hev', level='debug')
 
@@ -41,7 +42,7 @@ def bootstrap():
     futures = [
         pool.submit(core.helpers.elasticsearch.index_cleanup.run, CONF['elasticsearch']),
         pool.submit(modules.openvpn.build_client_configs.run, CONF['minio']),
-        pool.submit(instagram.run, CONF['instagram']),
+        pool.submit(modules.instagram.run, CONF['instagram']),
     ]
 
     for future in futures:

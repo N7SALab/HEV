@@ -6,13 +6,12 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
-hevlog = hevlog('elasticsearch', level='error')
+hevlog = hevlog('elasticsearch', level='info')
 
 
 class ElasticsearchConnect:
 
-    # TODO: move port into configuration file
-    def __init__(self, host=['elasticsearch'], port=9200, request_timeout=10,
+    def __init__(self, host=['elasticsearch'], request_timeout=10,
                  http_auth=None, use_ssl=True, verify_certs=True,
                  connection_class=RequestsHttpConnection):
 
@@ -23,7 +22,7 @@ class ElasticsearchConnect:
         for _host in host:
             try:
                 self.wrapper = Elasticsearch(
-                    hosts=[{'host': _host, 'port': port}],
+                    hosts=[_host],
                     request_timeout=request_timeout,
                     http_auth=http_auth,
                     use_ssl=use_ssl,
@@ -39,7 +38,6 @@ class ElasticsearchConnect:
                     raise Exception('No elasticsearch hosts available')
 
         self.host = host
-        self.port = port
         self.cache = []
         self.indices = []
 
@@ -62,7 +60,7 @@ class ElasticsearchConnect:
         num_indices = len(retrieved_indices)
 
         msg = 'Search found {} indices'.format(num_indices)
-        hevlog.logging.info('[delete indices] {}'.foramt(msg))
+        hevlog.logging.info('[delete indices] {}'.format(msg))
 
         if not num_indices:
             msg = '''No indices found. exiting'''
@@ -126,7 +124,16 @@ def run(elasticsearch_config):
         keys = sorted(list(search.keys()))
 
         # ignore these indices
-        keys.remove('.kibana')
+        ignore = [
+            '.kibana',
+            '.kibana_1',
+            '.kibana_2',
+            '.kibana_3'
+        ]
+
+        for _key in ignore:
+            if _key in keys:
+                keys.remove(_key)
 
         for alias in keys:
             # indices = get_indice(es, alias)

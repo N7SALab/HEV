@@ -1,0 +1,11 @@
+stages:
+- name: Build
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: skynet/hev
+      pushRemote: true
+      registry: registry.world0:5000
+timeout: 60
+notification: {}

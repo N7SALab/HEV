@@ -20,7 +20,7 @@ RUN browser="google-chrome.deb" \
     && apt update \
     && wget -v -O "$browser" "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" \
     && dpkg -i "$browser" \
-    && apt install -f -y \
+    || apt install -f -y \
     && apt autoclean \
     && rm -rf * 
 

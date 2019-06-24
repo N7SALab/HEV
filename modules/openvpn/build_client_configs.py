@@ -5,7 +5,7 @@ from core.helpers import minio
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
-hevlog = hevlog('openvpn', level='error')
+hevlog = hevlog('openvpn', level='info')
 
 
 class ClientConfig:
@@ -218,6 +218,6 @@ def run(minio_config):
             ca, cert, key, ta = collector(minioClient, minio_bucket, keys)
             creator(minioClient, minio_bucket, client_configs, ca, cert, key, ta, hosts, prefix, options)
 
-        hevlog.logging.debug('[build client configs] Finshed building all OpenVPN clients')
+        hevlog.logging.info('[build client configs] Finshed building all OpenVPN clients')
         hevlog.logging.debug('[ClientConfig] sleeping')
         sleeper.day('openvpn')

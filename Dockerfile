@@ -29,7 +29,6 @@ WORKDIR /hev
 
 COPY core core
 COPY external external
-COPY libs libs
 COPY modules modules
 COPY tests tests
 COPY web web

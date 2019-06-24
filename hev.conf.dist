@@ -1,11 +1,11 @@
 {
 "elasticsearch": {
-    "hosts": []
+    "hosts": ["http://elasticseach:9200"]
     },
 "neo4j": {
     "user": "neo4j",
     "password": "",
-    "servers": ["bolt://neo4j:7687", ""]
+    "servers": ["bolt://neo4j:7687"]
     },
 "minio": {
     "host": "minio:9000",

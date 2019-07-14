@@ -24,8 +24,8 @@ class hevlog:
         # Set logger format
         # FORMAT = '%(asctime)s %(levelname)s %(threadName)s %(module)s  %(message)s'
         # FORMAT = '[%(asctime)s][%(levelname)s ][%(threadName)s] [%(module)s] %(message)s'
-        # FORMAT = '%(asctime)s [%(levelname)s ] %(message)s'
-        FORMAT = '[%(name)s] [%(levelname)s ] %(message)s'
+        FORMAT = '%(asctime)s [%(levelname)s ] %(message)s'
+        # FORMAT = '[%(name)s] [%(levelname)s ] %(message)s'
         # FORMAT = '[%(levelname)s ] [%(name)s] %(message)s'
 
         self.name = name

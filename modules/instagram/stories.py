@@ -22,7 +22,7 @@ def authenticate(username, password):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('--no-sandbox')
-    browser = webdriver.Chrome(chrome_options=options)
+    browser = webdriver.Chrome(options=options)
     # browser = webdriver.Chrome()
     browser.get(login_page)
     hevlog.logging.debug('[authenticating] {}'.format(login_page))

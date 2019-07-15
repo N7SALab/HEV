@@ -1,8 +1,8 @@
 from minio import Minio
 
 
-def Client(CONF):
-    return Minio(CONF['host'],
-                 access_key=CONF['access_key'],
-                 secret_key=CONF['secret_key'],
+def Client(MINIO_CONF):
+    return Minio(MINIO_CONF['host'],
+                 access_key=MINIO_CONF['access_key'],
+                 secret_key=MINIO_CONF['secret_key'],
                  secure=False)

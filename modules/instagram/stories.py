@@ -6,7 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 from core.helpers.selenium.remote_driver import (chrome_headless_sandbox_disabled, chrome_headless_sandbox_enabled,
-                                                 chrome_no_opt, chrome_remote)
+                                                 chrome_no_opt, chrome_sandbox_enabled, chrome_remote)
 
 hevlog = hevlog('instagram', level='info')
 
@@ -21,6 +21,7 @@ def authenticate(username, password):
     login_page = 'https://www.instagram.com/accounts/login/?source=auth_switcher'
 
     # browser = chrome_no_opt()
+    # browser = chrome_sandbox_enabled()
     # browser = chrome_headless_sandbox_enabled()
     browser = chrome_headless_sandbox_disabled()
     # browser = chrome_remote()

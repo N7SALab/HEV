@@ -8,7 +8,7 @@ from core.helpers.sleep import sleeper
 from core.helpers.selenium.remote_driver import (chrome_headless_sandbox_disabled, chrome_headless_sandbox_enabled,
                                                  chrome_no_opt, chrome_remote)
 
-hevlog = hevlog('instagram', level='debug')
+hevlog = hevlog('instagram', level='info')
 
 
 def authenticate(username, password):
@@ -51,6 +51,8 @@ def authenticate(username, password):
         except:
             pass
 
+    sleeper.seconds('instagram get page', 1)
+
     login_btn = browser.find_element_by_xpath(
         '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[4]/button')
 
@@ -58,6 +60,7 @@ def authenticate(username, password):
     login_btn.click()
 
     sleeper.seconds('wait for instagram to log in', 2)
+
     hevlog.logging.debug(
         '[authenticated browser] [{}] {} session: {}'.format(browser.name, browser.title, browser.session_id))
 
@@ -113,13 +116,13 @@ def run(instagram_config):
     accounts = instagram_config['following']
 
     hevlog.logging.debug('[login] {}'.format(login))
-    hevlog.logging.debug('[accounts] {}'.format(len(accounts)))
+    hevlog.logging.info('[accounts] {}'.format(len(accounts)))
 
     while True:
         if len(accounts) > 0:
             auth = authenticate(login, password)
             for account in accounts:
-                hevlog.logging.info('[authenticated browser] [{}] {} session: {}'.format(auth.name, auth.title, auth.session_id))
+                hevlog.logging.debug('[authenticated browser] [{}] {} session: {}'.format(auth.name, auth.title, auth.session_id))
 
                 s = get_stories(auth, account)
 
@@ -139,7 +142,7 @@ def test_run(instagram_config):
     if len(accounts) > 0:
         auth = authenticate(login, password)
         for account in accounts:
-            hevlog.logging.info('[authenticated browser] [{}] {} session: {}'.format(auth.name, auth.title, auth.session_id))
+            hevlog.logging.debug('[authenticated browser] [{}] {} session: {}'.format(auth.name, auth.title, auth.session_id))
 
             s = get_stories(auth, account)
 

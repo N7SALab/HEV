@@ -119,6 +119,7 @@ def run(instagram_config):
     accounts = instagram_config['following']
 
     hevlog.logging.debug('[login] {}'.format(login))
+    hevlog.logging.info('Running...')
     hevlog.logging.info('[accounts] {}'.format(len(accounts)))
 
     while True:

@@ -194,6 +194,7 @@ def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefi
 
 
 def run(minio_config):
+    hevlog.logging.info('Running...')
 
     while True:
         minioClient = minio.Client(minio_config)

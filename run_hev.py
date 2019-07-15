@@ -35,7 +35,7 @@ except:
 
 
 def bootstrap():
-    hevlog.logging.info('[bootstrap] Starting')
+    hevlog.logging.info('[bootstrap] Starting...')
 
     pool = ThreadPoolExecutor(4)
 

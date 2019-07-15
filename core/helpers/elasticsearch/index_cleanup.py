@@ -14,10 +14,15 @@ class ElasticsearchConnect:
     def __init__(self, host=['elasticsearch'], request_timeout=10,
                  http_auth=None, use_ssl=True, verify_certs=True,
                  connection_class=RequestsHttpConnection):
+        """
 
-        if host == list():
-            hevlog.logging.error('No elasticsearch hosts given')
-            raise Exception('No elasticsearch hosts given')
+        :param host:
+        :param request_timeout:
+        :param http_auth:
+        :param use_ssl:
+        :param verify_certs:
+        :param connection_class:
+        """
 
         for _host in host:
             try:

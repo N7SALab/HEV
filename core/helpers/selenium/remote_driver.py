@@ -5,7 +5,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from core.helpers.log import hevlog
 
-hevlog = hevlog('selenium', level='debug')
+hevlog = hevlog('selenium', level='info')
 
 
 def chrome_no_opt():

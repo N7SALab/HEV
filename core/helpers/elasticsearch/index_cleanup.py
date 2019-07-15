@@ -108,6 +108,7 @@ class ElasticsearchConnect:
 
 
 def run(elasticsearch_config):
+    hevlog.logging.info('Running...')
 
     # TODO: this might create too many connections to elasticsearch
     while True:

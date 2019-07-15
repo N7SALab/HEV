@@ -4,7 +4,7 @@ from modules import instagram
 
 
 def test_run():
-    CONF = json.load(open('../hev.conf'))
+    CONF = json.load(open('hev.conf'))
     instagram.test_run(CONF['instagram'])
 
 

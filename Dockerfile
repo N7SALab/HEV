@@ -32,7 +32,7 @@ COPY external external
 COPY modules modules
 COPY tests tests
 COPY web web
-COPY run_HEV.py .
+COPY run_hev.py .
 COPY requirements.txt .
 COPY hev.conf .
 

@@ -42,5 +42,5 @@ RUN python3 -m pip install -r requirements.txt
 VOLUME "/hev/external/openvpn"
 
 # run app
-ENTRYPOINT ["python3", "run_HEV.py"]
+ENTRYPOINT ["python3", "run_hev.py"]
 

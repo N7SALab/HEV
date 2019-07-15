@@ -53,8 +53,11 @@ def authenticate(username, password):
 
     sleeper.seconds('instagram get page', 2)
 
-    login_btn = browser.find_element_by_xpath(
-        '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[4]/button')
+    try:
+        login_btn = browser.find_element_by_xpath(
+            '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[4]/button')
+    except:
+        return
 
     login_pass.send_keys(password)
     login_btn.click()

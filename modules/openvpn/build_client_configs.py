@@ -5,7 +5,7 @@ from core.helpers import minio
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
-hevlog = hevlog('openvpn', level='info')
+hevlog = hevlog('openvpn', level='error')
 
 
 class ClientConfig:
@@ -184,7 +184,7 @@ def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefi
             k_name, _ = os.path.splitext(k_name)
 
             if name == k_name:
-              config.add_key(k_data)
+                config.add_key(k_data)
 
         config_name, config_data, config_len = config.build_config(prefix)
 

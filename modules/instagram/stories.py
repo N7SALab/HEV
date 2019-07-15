@@ -36,6 +36,8 @@ def authenticate(username, password):
     actions.send_keys(username)
     actions.perform()
 
+    sleeper.seconds('instagram get page', 1)
+
     # the password field is sometimes div[3] and div[4]
     login_pass_xpaths = [
         '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[3]/div/label/input',

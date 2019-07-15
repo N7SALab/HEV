@@ -5,7 +5,7 @@ from core.helpers import minio
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
-hevlog = hevlog('openvpn', level='error')
+hevlog = hevlog('openvpn', level='info')
 
 
 class ClientConfig:

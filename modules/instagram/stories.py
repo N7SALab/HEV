@@ -51,7 +51,7 @@ def authenticate(username, password):
         except:
             pass
 
-    sleeper.seconds('instagram get page', 1)
+    sleeper.seconds('instagram get page', 2)
 
     login_btn = browser.find_element_by_xpath(
         '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[4]/button')
@@ -127,6 +127,8 @@ def run(instagram_config):
                 s = get_stories(auth, account)
 
                 hevlog.logging.info('[{}] {} stories'.format(account, s))
+
+                sleeper.minute('instagram')
 
         sleeper.hour('instagram')
 

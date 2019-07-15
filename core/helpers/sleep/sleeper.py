@@ -14,6 +14,22 @@ def seconds(caller, seconds):
     return time.sleep(sleep)
 
 
+def minute(caller):
+    """Sleep for a random minute
+    """
+    sleep = random.choice(range(1, 1 * 60))
+    hevlog.logging.debug('[{}] sleeping for {} minutes'.format(caller, sleep))
+    return time.sleep(sleep)
+
+
+def minutes(caller, minutes):
+    """Sleep for this many minutes
+    """
+    sleep = minutes * 60
+    hevlog.logging.debug('[{}] sleeping for {} minutes'.format(caller, sleep))
+    return time.sleep(sleep)
+
+
 def hour(caller):
     """At some time within an hour, this will run
     """

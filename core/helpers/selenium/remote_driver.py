@@ -1,3 +1,5 @@
+import warnings
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -12,6 +14,8 @@ def chrome_no_opt():
     """Chrome with no options
 
     """
+    warnings.warn('Docker does not support sandbox option')
+
     return webdriver.Chrome()
 
 
@@ -19,6 +23,8 @@ def chrome_headless_sandbox_enabled():
     """Headless Chrome with sandbox enabled
 
     """
+    warnings.warn('Docker does not support sandbox option')
+
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     return webdriver.Chrome(options=options)

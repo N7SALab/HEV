@@ -21,8 +21,8 @@ def authenticate(username, password):
     login_page = 'https://www.instagram.com/accounts/login/?source=auth_switcher'
 
     # browser = chrome_no_opt()
-    browser = chrome_headless_sandbox_enabled()
-    # browser = chrome_headless_sandbox_disabled()
+    # browser = chrome_headless_sandbox_enabled()
+    browser = chrome_headless_sandbox_disabled()
     # browser = chrome_remote()
 
     browser.get(login_page)

@@ -8,7 +8,7 @@ set -xe
 
 # Install Chrome Driver
 driver="chromedriver.zip"
-wget -v -O "$driver" https://chromedriver.storage.googleapis.com/75.0.3770.140/chromedriver_linux64.zip
+wget -v -O "$driver" "https://chromedriver.storage.googleapis.com/75.0.3770.140/chromedriver_linux64.zip"
 unzip -o -d /usr/local/bin chromedriver.zip
 chmod +x /usr/local/bin/chromedriver
 rm -f "$driver"

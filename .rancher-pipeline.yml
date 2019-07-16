@@ -15,6 +15,9 @@ stages:
       tag: skynet/hev:0.1
       pushRemote: true
       registry: registry.world0:5000
+    env:
+      PLUGIN_DEBUG: "true"
+      PLUGIN_INSECURE: "true"
 - name: Deploy
   steps:
   - applyYamlConfig:

@@ -4,6 +4,17 @@ stages:
   - runScriptConfig:
       image: python:3
       shellScript: |-
+        driver="chromedriver.zip" \
+            && wget -v -O "$driver" "https://chromedriver.storage.googleapis.com/75.0.3770.140/chromedriver_linux64.zip" \
+            && unzip -o -d /usr/local/bin chromedriver.zip \
+            && rm -f chromedriver.zip
+        browser="google-chrome.deb" \
+            && apt update \
+            && wget -v -O "$browser" "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" \
+            && dpkg -i "$browser" \
+            || apt install -f -y \
+            && apt autoclean \
+            && rm -f google-chrome.deb
         python3 -m pip install pytest
         python3 -m pip install -r requirements.txt
         pytest tests

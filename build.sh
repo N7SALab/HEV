@@ -6,8 +6,6 @@ set -e
 
 cd $(dirname $0)
 
-pytest tests || exit 1
-
 DOCKERFILE="Dockerfile"
 
 if [ ! $(which docker) ]; then echo "*** missing docker, please install docker ***"; exit 1; fi
@@ -26,6 +24,9 @@ set -ex
 # build image
 docker build -t $DOCKERNAME:$DOCKERTAG .
 docker tag $DOCKERNAME:$DOCKERTAG $DOCKERNAME:latest
+
+# test image
+docker run --rm --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests" || exit 1
 
 # push image
 REGISTRY="rancher.n7sa.com:5000"

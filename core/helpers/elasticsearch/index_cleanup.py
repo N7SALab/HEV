@@ -14,10 +14,15 @@ class ElasticsearchConnect:
     def __init__(self, host=['elasticsearch'], request_timeout=10,
                  http_auth=None, use_ssl=True, verify_certs=True,
                  connection_class=RequestsHttpConnection):
+        """
 
-        if host == list():
-            hevlog.logging.error('No elasticsearch hosts given')
-            raise Exception('No elasticsearch hosts given')
+        :param host:
+        :param request_timeout:
+        :param http_auth:
+        :param use_ssl:
+        :param verify_certs:
+        :param connection_class:
+        """
 
         for _host in host:
             try:
@@ -108,6 +113,7 @@ class ElasticsearchConnect:
 
 
 def run(elasticsearch_config):
+    hevlog.logging.info('Running...')
 
     # TODO: this might create too many connections to elasticsearch
     while True:
@@ -117,7 +123,7 @@ def run(elasticsearch_config):
         hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.wrapper.info()))
         hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.get_indices()))
 
-        DAYS = 30
+        DAYS = 14
 
         pattern = '*'
         search = es.search_indices(pattern)

@@ -25,6 +25,9 @@ set -ex
 docker build -t $DOCKERNAME:$DOCKERTAG .
 docker tag $DOCKERNAME:$DOCKERTAG $DOCKERNAME:latest
 
+# test image
+docker run --rm --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests" || exit 1
+
 # push image
 REGISTRY="rancher.n7sa.com:5000"
 docker tag $DOCKERNAME $REGISTRY/$DOCKERNAME:$DOCKERTAG

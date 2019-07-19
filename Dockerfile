@@ -11,7 +11,7 @@ WORKDIR /tmp
 
 # Install Chrome Driver
 RUN driver="chromedriver.zip" \
-    && wget -v -O "$driver" https://chromedriver.storage.googleapis.com/2.45/chromedriver_linux64.zip \
+    && wget -v -O "$driver" "https://chromedriver.storage.googleapis.com/75.0.3770.140/chromedriver_linux64.zip" \
     && unzip -o -d /usr/local/bin chromedriver.zip \
     && rm -rf *
 
@@ -40,6 +40,8 @@ COPY hev.conf .
 RUN python3 -m pip install -r requirements.txt
 
 VOLUME "/hev/external/openvpn"
+VOLUME "/hev/external/downloads"
+VOLUME "/hev/modules/youuuuuuutubedl/files"
 
 # run app
 ENTRYPOINT ["python3", "run_hev.py"]

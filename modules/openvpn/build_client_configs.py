@@ -184,7 +184,7 @@ def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefi
             k_name, _ = os.path.splitext(k_name)
 
             if name == k_name:
-              config.add_key(k_data)
+                config.add_key(k_data)
 
         config_name, config_data, config_len = config.build_config(prefix)
 
@@ -194,6 +194,7 @@ def creator(minioClient, bucket, client_configs, ca, cert, key, ta, hosts, prefi
 
 
 def run(minio_config):
+    hevlog.logging.info('Running...')
 
     while True:
         minioClient = minio.Client(minio_config)

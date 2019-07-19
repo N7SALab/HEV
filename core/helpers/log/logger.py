@@ -1,6 +1,6 @@
 import logging
 
-from logging import (CRITICAL, FATAL, ERROR, WARNING, INFO, DEBUG, NOTSET)
+from logging import (CRITICAL, FATAL, ERROR, WARNING, WARN, INFO, DEBUG, NOTSET)
 
 
 # CRITICAL = 50
@@ -49,7 +49,7 @@ class hevlog:
         elif level.lower() == 'info' or level.lower() == 'i':
             return INFO
         elif level.lower() == 'warning' or level.lower() == 'w':
-            return WARNING
+            return WARN
         elif level.lower() == 'error' or level.lower() == 'e':
             return ERROR
         elif level.lower() == 'fatal' or level.lower() == 'f':

@@ -123,7 +123,7 @@ def run(elasticsearch_config):
         hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.wrapper.info()))
         hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.get_indices()))
 
-        DAYS = 30
+        DAYS = 14
 
         pattern = '*'
         search = es.search_indices(pattern)

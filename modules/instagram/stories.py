@@ -122,7 +122,7 @@ def get_stories(authenticated_browser, account):
             stories += 1
         except:
             # TODO: disable browser proxy when done
-            hevlog.logging.info('[get stories] done: {}'.format(account))
+            hevlog.logging.debug('[get stories] done: {}'.format(account))
             return stories
 
 

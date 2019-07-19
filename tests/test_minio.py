@@ -4,7 +4,7 @@ from core.helpers import minio
 
 def test_Client():
     CONF = json.load(open('hev.conf'))
-    assert minio.Client(CONF['minio'])
+    minio.Client(CONF['minio'])
 
 
 def test_check_socket():

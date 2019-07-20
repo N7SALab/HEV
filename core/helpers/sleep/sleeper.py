@@ -44,3 +44,11 @@ def day(caller):
     sleep = random.choice(range(1, 24 * 60 * 60))
     hevlog.logging.info('[day] [{}] sleeping for {} seconds'.format(caller, sleep))
     return time.sleep(sleep)
+
+
+def range(caller, seconds):
+    """Sleep for a random range
+    """
+    sleep = random.choice(range(1, seconds))
+    hevlog.logging.debug('[range] [{}] sleeping for {} seconds'.format(caller, sleep))
+    return time.sleep(sleep)

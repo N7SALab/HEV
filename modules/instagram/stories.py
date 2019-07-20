@@ -5,8 +5,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
-from core.helpers.selenium.remote_driver import (chrome_headless_sandbox_disabled, chrome_headless_sandbox_enabled,
-                                                 chrome_no_opt, chrome_sandbox_enabled, chrome_remote)
+from core.helpers.selenium.browser import (chrome_headless_sandbox_disabled, chrome_headless_sandbox_enabled,
+                                           chrome_no_opt, chrome_sandbox_enabled, chrome_remote)
 
 hevlog = hevlog('instagram', level='info')
 
@@ -120,6 +120,7 @@ def get_stories(authenticated_browser, account):
             if title == 'Instagram':
                 raise Exception
             stories += 1
+            sleeper.seconds('watch the story for a bit', 1)
         except:
             # TODO: disable browser proxy when done
             hevlog.logging.debug('[get stories] done: {}'.format(account))
@@ -174,11 +175,11 @@ def run(instagram_config):
                 hevlog.logging.debug(
                     '[authenticated browser] [{}] {} session: {}'.format(auth.name, auth.title, auth.session_id))
 
-                s = get_stories(auth, account)
+                stories = get_stories(auth, account)
 
-                hevlog.logging.info('[{}] {} stories'.format(account, s))
+                hevlog.logging.info('[{}] {} stories'.format(account, stories))
 
-                sleeper.minute('instagram')
+                # sleeper.minute('instagram')
 
         sleeper.hour('instagram')
 

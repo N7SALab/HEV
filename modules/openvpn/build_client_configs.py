@@ -151,7 +151,8 @@ def put_object(minio_client, bucket, client_configs, config_name, config_data, c
     """ Minio object uploader
     """
     hevlog.logging.debug('[put_object] Uploading: {}'.format(config_name))
-    return minio_client.Minio.put_object(bucket, '{}/{}'.format(client_configs, config_name), config_data, config_len)
+    return minio_client.Minio.put_object(bucket, '{}/{}'.format(client_configs, config_name),
+                                         config_data, config_len)
 
 
 def create_configs(minio_client, bucket, client_configs, ca, cert, key, ta, hosts, prefix, options=None):
@@ -210,7 +211,6 @@ def run(minio_config, openvpn_config):
 
 
 def test_run(minio_config, openvpn_config):
-
     while True:
         minio_client = minio.client(minio_config, secure=False)
 

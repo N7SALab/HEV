@@ -3,8 +3,8 @@ FROM python:3
 LABEL maintainer="naisanza@gmail.com"
 LABEL description="Hunt Everythning"
 LABEL dockername="skynet/hev"
-LABEL dockertag="0.1"
-LABEL version="0.1"
+LABEL dockertag="v0.2.0"
+LABEL version="v0.2.0"
 
 
 WORKDIR /tmp

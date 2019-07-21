@@ -41,7 +41,7 @@ def bootstrap():
 
     futures = [
         pool.submit(core.helpers.elasticsearch.index_cleanup.run, CONF['elasticsearch']),
-        pool.submit(modules.openvpn.build_client_configs.run, CONF['minio']),
+        pool.submit(modules.openvpn.build_client_configs.run, CONF['minio'], CONF['openvpn']),
         pool.submit(modules.instagram.run, CONF['instagram']),
     ]
 

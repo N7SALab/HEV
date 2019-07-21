@@ -17,6 +17,9 @@ for c in configs:
     except:
         pass
 
+public_minio = minio.Wrapper('play.minio.io:9000', 'Q3AM3UQ867SPQQA43P2F',
+                             'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG')
+
 
 def test_MinioWrapper():
     assert minio.MinioWrapper(CONF['minio'], secure=False).Minio.list_buckets() is not None

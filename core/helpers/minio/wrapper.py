@@ -32,7 +32,20 @@ class Wrapper:
     def list_all_objects(self, bucket, folder, recursive=True):
         """ List Minio objects
         """
+        hevlog.logging.debug('[list_all_objects] bucket: {}, folder: {}'.format(bucket, folder))
         return self.Minio.list_objects_v2(bucket, folder, recursive=recursive)
+
+    def put_object(self, bucket_name, object_name, data, length,
+                   content_type='application/octet-stream',
+                   metadata=None, sse=None, progress=None,
+                   part_size=None):
+        """ Minio object uploader
+        """
+
+        hevlog.logging.debug('[put_object] Uploading: {}'.format(object_name))
+        return self.Minio.put_object(bucket_name, object_name, data, length,
+                                     content_type=content_type,
+                                     metadata=metadata, sse=sse, progress=progress)
 
 
 def client(MINIO_CONF, secure=True, session_token=None, region=None, http_client=None):

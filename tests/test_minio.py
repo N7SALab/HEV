@@ -63,6 +63,11 @@ def test_clear_bucket():
     client.make_bucket(bucket_name)
     client.clear_bucket(bucket_name)
 
+try:
+    CONF = json.load(open('hev.conf'))
+except:
+    CONF = json.load(open('../hev.conf'))
+
 
 if __name__ == "__main__":
     test_clear_bucket()

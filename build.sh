@@ -26,7 +26,9 @@ docker build -t $DOCKERNAME:$DOCKERTAG .
 docker tag $DOCKERNAME:$DOCKERTAG $DOCKERNAME:latest
 
 # test image
-docker run --rm --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests"
+#docker run --rm --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests"
+# big shm-size for chrome to work
+docker run --rm --shm-size 512m --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests"
 
 # push image
 REGISTRY="rancher.n7sa.com:5000"

@@ -6,7 +6,9 @@ import datetime
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from urllib.parse import urlparse
 
+from core.helpers import sanitation
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
 
@@ -30,14 +32,11 @@ class Browser:
         if not self.minio_client:
             return False
 
-        if not object_name:
-            timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
-            object_name = 'screenshot-{}.png'.format(timestamp)
-        else:
-            object_name = 'screenshot.png'
-
         if url:
             self.browser.get(url)
+
+        if not object_name:
+            object_name = screenshot_name(self.browser)
 
         sleeper.seconds('Loading page', 4)
 
@@ -53,15 +52,12 @@ class Browser:
 
     def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymy', object_name=None):
 
-        if not object_name:
-            timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
-            object_name = 'screenshot-{}.png'.format(timestamp)
-        else:
-            object_name = 'screenshot.png'
-
         if url:
             self.browser.get(url)
             sleeper.seconds('Loading page', 4)
+
+        if not object_name:
+            object_name = screenshot_name(self.browser)
 
         png = self.browser.get_screenshot_as_png()
 
@@ -77,17 +73,12 @@ class Browser:
 
     def save_screenshot_to_file(self, url=None, object_name=None):
 
-        # TODO: change this to browser.title
-        # TODO: clean title to asci only
-        if not object_name:
-            timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
-            object_name = 'screenshot-{}.png'.format(timestamp)
-        else:
-            object_name = 'screenshot.png'
-
         if url:
             self.browser.get(url)
             sleeper.seconds('Loading page', 4)
+
+        if not object_name:
+            object_name = screenshot_name(self.browser)
 
         path = os.path.abspath('/tmp/hev')
         if not os.path.exists(path):
@@ -254,6 +245,23 @@ def chrome_remote(host='127.0.0.1', port='4444', executor_path='/wd/hub'):
         command_executor='http://{}:{}{}'.format(host, port, executor_path),
         desired_capabilities=DesiredCapabilities.CHROME
     )
+
+
+def screenshot_name(browser):
+    """Generate a unique filename
+
+    :param browser:
+    :return:
+    """
+    title = browser.title
+    url = browser.current_url
+    hostname = urlparse(url).hostname
+
+    hostname_ = sanitation.string(hostname)
+    title_ = sanitation.string(title)
+    timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
+
+    return '{}_{}_{}{}'.format(hostname_, title_, timestamp, '.png')
 
 
 if __name__ == "__main__":

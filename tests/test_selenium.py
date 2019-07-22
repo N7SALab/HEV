@@ -78,8 +78,17 @@ def test_save_screenshot_to_minio():
     browser.browser.stop_client()
 
 
+def test_save_screenshot_to_file():
+    assert Browser().save_screenshot_to_file('http://google.com')
+
+
+def test_click():
+    return
+
+
+def test_type():
+    return
+
+
 if __name__ == "__main__":
-    browser = chrome()
-    browser.close()
-    browser.quit()
-    browser.stop_client()
+    test_save_screenshot_to_file()

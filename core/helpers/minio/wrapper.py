@@ -50,16 +50,25 @@ class Wrapper:
             hevlog.logging.info(
                 '[put_object] Saved to {}/{}/{}'.format(self.Minio._endpoint_url, bucket_name, object_name))
 
+            return True
+
         except:
             hevlog.logging.error(
                 '[put_object] Unable to save {}/{}/{}'.format(self.Minio._endpoint_url, bucket_name, object_name))
+
+            return False
 
     def make_bucket(self, bucket_name):
         try:
             self.Minio.make_bucket(bucket_name)
             hevlog.logging.debug('[make_bucket] Created bucket: {}'.format(bucket_name))
+
+            return True
+
         except:
             hevlog.logging.debug('[make_bucket] Bucket exists: {}'.format(bucket_name))
+
+            return False
 
 
 def client(MINIO_CONF, secure=True, session_token=None, region=None, http_client=None):

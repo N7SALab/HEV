@@ -46,7 +46,7 @@ public_minio = minio.use_public_server()
 
 def test_public_upload():
     bucket_name = 'mymymymymy'
-    object_name = 'file.txt'
+    object_name = 'test.txt'
     data = io.BytesIO(bytes(str(datetime.datetime.now()).encode()))
     length = data.getvalue().__len__()
 

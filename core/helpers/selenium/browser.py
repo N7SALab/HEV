@@ -48,9 +48,8 @@ class Browser:
 
         private_minio = self.minio_client
         private_minio.make_bucket(bucket_name)
-        private_minio.put_object(bucket_name, object_name, data, length)
 
-        return True
+        return private_minio.put_object(bucket_name, object_name, data, length)
 
     def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymy', object_name=None):
 
@@ -73,12 +72,13 @@ class Browser:
 
         public_minio = use_public_server()
         public_minio.make_bucket(bucket_name)
-        public_minio.put_object(bucket_name, object_name, data, length)
 
-        return True
+        return public_minio.put_object(bucket_name, object_name, data, length)
 
     def save_screenshot_to_file(self, url=None, object_name=None):
 
+        # TODO: change this to browser.title
+        # TODO: clean title to asci only
         if not object_name:
             timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
             object_name = 'screenshot-{}.png'.format(timestamp)
@@ -92,9 +92,8 @@ class Browser:
         path = os.path.abspath('/tmp/hev')
         if not os.path.exists(path):
             os.makedirs(path)
-        self.browser.save_screenshot(os.path.join(path, object_name))
 
-        return True
+        return self.browser.save_screenshot(os.path.join(path, object_name))
 
     def new_resolution(self, width=1920, height=1080, device_type='web'):
 
@@ -139,6 +138,9 @@ class Browser:
             height = 3080
 
         self.browser.set_window_size(width, height)
+
+    def close(self):
+        self.browser.close()
 
     def quit(self):
         self.browser.close()

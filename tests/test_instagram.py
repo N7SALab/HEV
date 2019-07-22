@@ -2,12 +2,13 @@ import json
 
 from modules import instagram
 
+try:
+    CONF = json.load(open('hev.conf'))
+except:
+    CONF = json.load(open('../hev.conf'))
+
 
 def test_run():
-    try:
-        CONF = json.load(open('hev.conf'))
-    except:
-        CONF = json.load(open('../hev.conf'))
     # instagram.run(CONF['instagram'])
     instagram.test_run(CONF['instagram'])
 

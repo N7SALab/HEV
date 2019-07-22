@@ -9,8 +9,8 @@ except:
 
 
 def test_run():
-    # instagram.run(CONF['instagram'])
-    instagram.test_run(CONF['instagram'])
+    # instagram.run(CONF)
+    instagram.test_run(CONF)
 
 
 if __name__ == "__main__":

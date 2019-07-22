@@ -57,11 +57,11 @@ def disabled_test_chrome_remote():
 def test_save_screenshot_to_public_minio():
     browser = Browser(chrome_headless_nosandbox())
     browser.new_resolution(device_type='pixel3')
-    browser.selenium.get('http://reddit.com/')
+    browser.browser.get('http://reddit.com/')
     assert browser.save_screenshot_to_public_minio()
-    browser.selenium.close()
-    browser.selenium.quit()
-    browser.selenium.stop_client()
+    browser.browser.close()
+    browser.browser.quit()
+    browser.browser.stop_client()
 
 
 def test_save_screenshot_to_minio():
@@ -70,11 +70,11 @@ def test_save_screenshot_to_minio():
 
     browser = Browser(chrome_headless_nosandbox())
     browser.new_resolution(device_type='pixel3')
-    browser.selenium.get('http://reddit.com/')
+    browser.browser.get('http://reddit.com/')
     assert browser.save_screenshot_to_minio(client)
-    browser.selenium.close()
-    browser.selenium.quit()
-    browser.selenium.stop_client()
+    browser.browser.close()
+    browser.browser.quit()
+    browser.browser.stop_client()
 
 
 if __name__ == "__main__":

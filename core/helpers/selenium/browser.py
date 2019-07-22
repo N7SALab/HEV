@@ -17,38 +17,54 @@ hevlog = hevlog('selenium', level='info')
 
 class Browser:
 
-    def __init__(self, selenium=None, webdriver=webdriver):
+    def __init__(self, browser=None, webdriver=webdriver):
         self.webdriver = webdriver
-        self.selenium = selenium if selenium else self.webdriver.Chrome()
+        self.browser = browser if browser else self.webdriver.Chrome()
+        self.minio_client = None
 
-    def save_screenshot_to_minio(self, minio_client, url=None, bucket_name='testing',
-                                 object_name='screenshot-{}.png'.format(
-                                     str(datetime.datetime.now().isoformat()).replace(':', '_'))):
+    def set_minio_client(self, minio_client):
+        self.minio_client = minio_client
+
+    def save_screenshot_to_minio(self, url=None, bucket_name='testing', object_name=None):
+
+        if not self.minio_client:
+            return False
+
+        if not object_name:
+            timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
+            object_name = 'screenshot-{}.png'.format(timestamp)
+        else:
+            object_name = 'screenshot.png'
 
         if url:
-            self.selenium.get(url)
+            self.browser.get(url)
 
         sleeper.seconds('Loading page', 4)
 
         bucket_name = bucket_name
         object_name = object_name
-        data = io.BytesIO(self.selenium.get_screenshot_as_png())
+        data = io.BytesIO(self.browser.get_screenshot_as_png())
         length = data.getvalue().__len__()
 
-        private_minio = minio_client
+        private_minio = self.minio_client
         private_minio.make_bucket(bucket_name)
         private_minio.put_object(bucket_name, object_name, data, length)
 
         return True
 
-    def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymy',
-                                        object_name='screenshot-{}.png'.format(
-                                            str(datetime.datetime.now().isoformat()).replace(':', '_'))):
+    def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymy', object_name=None):
+
+        if not object_name:
+            timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
+            object_name = 'screenshot-{}.png'.format(timestamp)
+        else:
+            object_name = 'screenshot.png'
+
         if url:
-            self.selenium.get(url)
+            self.browser.get(url)
             sleeper.seconds('Loading page', 4)
 
-        png = self.selenium.get_screenshot_as_png()
+        png = self.browser.get_screenshot_as_png()
 
         bucket_name = bucket_name
         object_name = object_name
@@ -58,6 +74,25 @@ class Browser:
         public_minio = use_public_server()
         public_minio.make_bucket(bucket_name)
         public_minio.put_object(bucket_name, object_name, data, length)
+
+        return True
+
+    def save_screenshot_to_file(self, url=None, object_name=None):
+
+        if not object_name:
+            timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
+            object_name = 'screenshot-{}.png'.format(timestamp)
+        else:
+            object_name = 'screenshot.png'
+
+        if url:
+            self.browser.get(url)
+            sleeper.seconds('Loading page', 4)
+
+        path = os.path.abspath('/tmp/hev')
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.browser.save_screenshot(os.path.join(path, object_name))
 
         return True
 
@@ -103,7 +138,12 @@ class Browser:
             width = 1920
             height = 3080
 
-        self.selenium.set_window_size(width, height)
+        self.browser.set_window_size(width, height)
+
+    def quit(self):
+        self.browser.close()
+        self.browser.quit()
+        self.browser.stop_client()
 
 
 def click(browser, xpath):
@@ -113,8 +153,8 @@ def click(browser, xpath):
     :param xpath: chrome xpath
     :return:
     """
-    browser = browser.find_element_by_xpath(xpath)
-    return browser.click()
+    element = browser.find_element_by_xpath(xpath)
+    return element.click()
 
 
 def type(browser, keys):
@@ -128,7 +168,7 @@ def type(browser, keys):
     for key in keys:
         actions.send_keys(key)
 
-    actions.perform()
+    return actions.perform()
 
 
 def chrome():
@@ -139,7 +179,7 @@ def chrome():
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
     options = webdriver.ChromeOptions()
-    return webdriver.Chrome()
+    return webdriver.Chrome(options=options)
 
 
 def chrome_sandboxed():

@@ -69,9 +69,10 @@ def test_save_screenshot_to_minio():
     assert client is not None
 
     browser = Browser(chrome_headless_nosandbox())
-    browser.new_resolution(device_type='pixel3')
+    browser.new_resolution(device_type='800x600')
     browser.browser.get('http://reddit.com/')
-    assert browser.save_screenshot_to_minio(client)
+    browser.set_minio_client(client)
+    assert browser.save_screenshot_to_minio()
     browser.browser.close()
     browser.browser.quit()
     browser.browser.stop_client()

@@ -43,9 +43,23 @@ class Wrapper:
         """
 
         hevlog.logging.debug('[put_object] Uploading: {}'.format(object_name))
-        return self.Minio.put_object(bucket_name, object_name, data, length,
-                                     content_type=content_type,
-                                     metadata=metadata, sse=sse, progress=progress)
+        try:
+            self.Minio.put_object(bucket_name, object_name, data, length,
+                                  content_type=content_type,
+                                  metadata=metadata, sse=sse, progress=progress)
+            hevlog.logging.info(
+                '[put_object] Saved to {}/{}/{}'.format(self.Minio._endpoint_url, bucket_name, object_name))
+
+        except:
+            hevlog.logging.error(
+                '[put_object] Unable to save {}/{}/{}'.format(self.Minio._endpoint_url, bucket_name, object_name))
+
+    def make_bucket(self, bucket_name):
+        try:
+            self.Minio.make_bucket(bucket_name)
+            hevlog.logging.debug('[make_bucket] Created bucket: {}'.format(bucket_name))
+        except:
+            hevlog.logging.debug('[make_bucket] Bucket exists: {}'.format(bucket_name))
 
 
 def client(MINIO_CONF, secure=True, session_token=None, region=None, http_client=None):
@@ -70,3 +84,8 @@ def check_connection(host, port):
         return True
     except:
         return False
+
+
+def use_public_server():
+    return Wrapper('play.minio.io:9000', 'Q3AM3UQ867SPQQA43P2F',
+                   'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG')

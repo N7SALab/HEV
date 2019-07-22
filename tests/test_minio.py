@@ -9,9 +9,6 @@ try:
 except:
     CONF = json.load(open('../hev.conf'))
 
-public_minio = minio.Wrapper('play.minio.io:9000', 'Q3AM3UQ867SPQQA43P2F',
-                             'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG')
-
 
 def test_Client():
     assert minio.client(CONF['minio'], secure=False).Minio.list_buckets() is not None
@@ -44,14 +41,14 @@ def test_Wrapper():
                          http_client=None).Minio is not None
 
 
+public_minio = minio.use_public_server()
+
+
 def test_public_upload():
     bucket_name = 'mymymymymy'
     object_name = 'file.txt'
     data = io.BytesIO(bytes(str(datetime.datetime.now()).encode()))
     length = data.getvalue().__len__()
 
-    try:
-        public_minio.Minio.make_bucket(bucket_name)
-    except:
-        pass
+    public_minio.make_bucket(bucket_name)
     public_minio.put_object(bucket_name, object_name, data, length)

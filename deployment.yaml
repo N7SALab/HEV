@@ -35,7 +35,7 @@ spec:
         workload.user.cattle.io/workloadselector: deployment-world0-www-hev
     spec:
       containers:
-      - image: rancher.n7sa.com:5000/skynet/hev:v0.2.5
+      - image: rancher.n7sa.com:5000/skynet/hev:v0.2.6
         imagePullPolicy: Always
         name: www-hev
         resources: {}

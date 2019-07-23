@@ -26,6 +26,11 @@ def test_chrome_for_docker():
     browser.quit()
 
 
+def test_chrome_for_docker():
+    browser = chrome_for_docker()
+    browser.quit()
+
+
 def disabled_test_chrome():
     browser = chrome()
     browser.quit()
@@ -102,4 +107,4 @@ def test_type():
 
 
 if __name__ == "__main__":
-    test_save_screenshot_to_file()
+    test_click()

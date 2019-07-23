@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 from core.helpers import sanitation
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
+from core.helpers.selenium import options
 
 from core.helpers.minio import use_public_server
 
@@ -171,8 +172,23 @@ def chrome():
     warnings.warn('Docker does not support sandbox option')
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    options = webdriver.ChromeOptions()
-    return webdriver.Chrome(options=options)
+    opt = options.default(webdriver.ChromeOptions())
+
+    return webdriver.Chrome(options=opt)
+
+
+def chrome_for_docker():
+    """Chrome best used with docker
+
+    """
+    opt = options.default(webdriver.ChromeOptions())
+    opt = options.nosandbox(opt)
+    opt = options.headless(opt)
+    opt = options.noinfobars(opt)
+    opt = options.noextensions(opt)
+    opt = options.nonotifications(opt)
+
+    return webdriver.Chrome(options=opt)
 
 
 def chrome_sandboxed():
@@ -182,8 +198,21 @@ def chrome_sandboxed():
     warnings.warn('Docker does not support sandbox option')
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    options = webdriver.ChromeOptions()
-    return webdriver.Chrome(options=options)
+    opt = options.default(webdriver.ChromeOptions())
+
+    return webdriver.Chrome(options=opt)
+
+
+def chrome_nosandbox():
+    """Chrome with sandbox disabled
+
+    """
+    warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
+
+    opt = options.default(webdriver.ChromeOptions())
+    opt = options.nosandbox(opt)
+
+    return webdriver.Chrome(options=opt)
 
 
 def chrome_headless_sandboxed():
@@ -193,10 +222,10 @@ def chrome_headless_sandboxed():
     warnings.warn('Docker does not support sandbox option')
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('--ignore-certificate-errors')
-    return webdriver.Chrome(options=options)
+    opt = options.default(webdriver.ChromeOptions())
+    opt = options.headless(opt)
+
+    return webdriver.Chrome(options=opt)
 
 
 def chrome_headless_nosandbox():
@@ -204,24 +233,38 @@ def chrome_headless_nosandbox():
 
     """
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
-    warnings.warn('''Possible error: <Future at 0x7f2504d09250 state=finished raised TimeoutException> Message: timeout
-(Session info: headless chrome=75.0.3770.142)
-''', Warning)
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('--no-sandbox')
-    return webdriver.Chrome(options=options)
+
+    opt = options.default(webdriver.ChromeOptions())
+    opt = options.headless(opt)
+    opt = options.nosandbox(opt)
+
+    return webdriver.Chrome(options=opt)
+
+
+def chrome_headless_nosandbox_unsafe():
+    """Headless Chrome with sandbox disabled with not certificate verification
+
+    """
+    warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
+
+    opt = options.default(webdriver.ChromeOptions())
+    opt = options.headless(opt)
+    opt = options.nosandbox(opt)
+    opt = options.unsafe(opt)
+
+    return webdriver.Chrome(options=opt)
 
 
 def chrome_headless_nosandbox_noshm():
     """Headless Chrome with sandbox disabled
 
     """
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    return webdriver.Chrome(options=options)
+    opt = options.default(webdriver.ChromeOptions())
+    opt = options.headless(opt)
+    opt = options.nosandbox(opt)
+    opt = options.noshm(opt)
+
+    return webdriver.Chrome(options=opt)
 
 
 def chrome_headless_nosandbox_bigshm():
@@ -229,10 +272,13 @@ def chrome_headless_nosandbox_bigshm():
 
     """
     warnings.warn('Larger shm option is not implemented', Warning)
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('--no-sandbox')
-    return webdriver.Chrome(options=options)
+
+    opt = options.default(webdriver.ChromeOptions())
+    opt = options.headless(opt)
+    opt = options.nosandbox(opt)
+    opt = options.bigshm(opt)
+
+    return webdriver.Chrome(options=opt)
 
 
 def chrome_remote(host='127.0.0.1', port='4444', executor_path='/wd/hub'):
@@ -241,6 +287,7 @@ def chrome_remote(host='127.0.0.1', port='4444', executor_path='/wd/hub'):
     """
     hevlog.logging.info(
         'Remote WebDriver Hub URL: http://{}:{}{}/static/resource/hub.html'.format(host, port, executor_path))
+
     return webdriver.Remote(
         command_executor='http://{}:{}{}'.format(host, port, executor_path),
         desired_capabilities=DesiredCapabilities.CHROME

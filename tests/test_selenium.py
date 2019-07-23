@@ -34,7 +34,7 @@ def disabled_test_chrome_sandboxed():
     browser.quit()
 
 
-def test_chrome_nosandbox():
+def disabled_test_chrome_nosandbox():
     browser = chrome_nosandbox()
     browser.quit()
 
@@ -94,7 +94,7 @@ def test_click():
 
 def test_type():
     warnings.warn('Test not implemented', Warning)
-    browser = Browser(chrome_nosandbox())
+    browser = Browser(chrome_for_docker())
     browser.quit()
 
 

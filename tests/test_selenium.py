@@ -1,17 +1,17 @@
 import json
+import warnings
 
 from core.helpers.sleep import sleeper
 
 from core.helpers import minio
 
-from core.helpers.selenium.browser import (
-    Browser,
-    chrome_headless_nosandbox,
-    chrome_headless_sandboxed,
-    chrome_sandboxed,
-    chrome_remote,
-    chrome
-)
+from core.helpers.selenium.browser import (Browser, chrome_sandboxed, chrome_remote,
+                                           chrome_headless_sandboxed, chrome_headless_nosandbox_unsafe,
+                                           chrome_headless_nosandbox_noshm, chrome_headless_nosandbox_bigshm,
+                                           chrome_for_docker, chrome, chrome_headless_nosandbox,
+                                           chrome_nosandbox,
+                                           click, type
+                                           )
 
 try:
     CONF = json.load(open('hev.conf'))
@@ -19,49 +19,47 @@ except:
     CONF = json.load(open('../hev.conf'))
 
 
+def test_chrome_for_docker():
+    browser = chrome_for_docker()
+    browser.quit()
+
+
 def disabled_test_chrome():
     browser = chrome()
-    browser.close()
     browser.quit()
-    browser.stop_client()
 
 
 def disabled_test_chrome_sandboxed():
     browser = chrome_sandboxed()
-    browser.close()
     browser.quit()
-    browser.stop_client()
+
+
+def test_chrome_nosandbox():
+    browser = chrome_nosandbox()
+    browser.quit()
 
 
 def test_chrome_headless_nosandbox():
     browser = chrome_headless_nosandbox()
-    browser.close()
     browser.quit()
-    browser.stop_client()
 
 
 def disabled_test_chrome_headless_sandboxed():
     browser = chrome_headless_sandboxed()
-    browser.close()
     browser.quit()
-    browser.stop_client()
 
 
 def disabled_test_chrome_remote():
     browser = chrome_remote()
-    browser.close()
     browser.quit()
-    browser.stop_client()
 
 
 def test_save_screenshot_to_public_minio():
     browser = Browser(chrome_headless_nosandbox())
-    browser.new_resolution(device_type='pixel3')
+    browser.new_resolution(device_type='800x600')
     browser.browser.get('http://reddit.com/')
     assert browser.save_screenshot_to_public_minio()
-    browser.browser.close()
-    browser.browser.quit()
-    browser.browser.stop_client()
+    browser.quit()
 
 
 def test_save_screenshot_to_minio():
@@ -73,22 +71,32 @@ def test_save_screenshot_to_minio():
     browser.browser.get('http://reddit.com/')
     browser.set_minio_client(client)
     assert browser.save_screenshot_to_minio()
-    browser.browser.close()
-    browser.browser.quit()
-    browser.browser.stop_client()
+    browser.quit()
 
 
 def test_save_screenshot_to_file():
-    assert Browser().save_screenshot_to_file('http://google.com')
+    browser = Browser(chrome_headless_nosandbox())
+    browser.new_resolution(device_type='800x600')
+    assert browser.save_screenshot_to_file('http://google.com')
+    browser.quit()
 
 
 def test_click():
-    return
+    browser = Browser(chrome_for_docker())
+    browser.browser.get('https://reddit.com')
+    browser.save_screenshot_to_file()
+    click(browser.browser, '//*[@id="USER_DROPDOWN_ID"]')
+    browser.save_screenshot_to_file()
+    click(browser.browser, '/html/body/div[4]/div/button')
+    browser.save_screenshot_to_file()
+    browser.quit()
 
 
 def test_type():
-    return
+    warnings.warn('Test not implemented', Warning)
+    browser = Browser(chrome_nosandbox())
+    browser.quit()
 
 
 if __name__ == "__main__":
-    test_save_screenshot_to_file()
+    test_click()

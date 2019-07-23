@@ -3,11 +3,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 from core.helpers.log import hevlog
 from core.helpers.sleep import sleeper
-from core.helpers.selenium.browser import (Browser, chrome_headless_nosandbox,
-                                           chrome_headless_sandboxed,
-                                           chrome,
-                                           chrome_sandboxed,
-                                           chrome_remote)
+from core.helpers.selenium.browser import (Browser, chrome_nosandbox, chrome_headless_nosandbox,
+                                           chrome, chrome_for_docker, chrome_headless_nosandbox_bigshm,
+                                           chrome_headless_nosandbox_noshm, chrome_headless_nosandbox_unsafe,
+                                           chrome_headless_sandboxed, chrome_remote, chrome_sandboxed,
+                                           click, type)
 
 from core.helpers import minio
 
@@ -30,7 +30,8 @@ def authenticate(username, password, minio_client=None, retries=None):
         login_page = 'https://www.instagram.com/accounts/login/?source=auth_switcher'
 
         # browser = Browser(chrome())
-        browser = Browser(chrome_headless_nosandbox())
+        # browser = Browser(chrome_headless_nosandbox())
+        browser = Browser(chrome_for_docker())
         # browser = Browser(chrome_sandboxed())
         # browser = Browser(chrome_headless_sandboxed())
         # browser = Browser(chrome_remote())

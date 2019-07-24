@@ -11,7 +11,7 @@ from core.helpers.selenium.browser import (Browser, chrome_nosandbox, chrome_hea
 
 from core.helpers import minio
 
-hevlog = hevlog('instagram', level='debug')
+hevlog = hevlog('instagram', level='info')
 
 
 def authenticate(username, password, minio_client=None, retries=None):

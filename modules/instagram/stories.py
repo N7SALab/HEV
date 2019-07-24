@@ -11,7 +11,7 @@ from core.helpers.selenium.browser import (Browser, chrome_nosandbox, chrome_hea
 
 from core.helpers import minio
 
-hevlog = hevlog('instagram', level='info')
+hevlog = hevlog('instagram', level='debug')
 
 
 def authenticate(username, password, minio_client=None, retries=None):
@@ -43,7 +43,7 @@ def authenticate(username, password, minio_client=None, retries=None):
 
         browser.save_screenshot_to_minio()
 
-        hevlog.logging.debug('[authenticating] {}'.format(login_page))
+        hevlog.logging.debug('[authenticate] {}'.format(login_page))
 
         sleeper.seconds('instagram get page', 1)
 
@@ -130,7 +130,6 @@ def get_stories(authenticated_browser, account):
 
     while True:
         try:
-            hevlog.logging.debug(('[get_stories] {}'.format(account)))
             next_story(browser)
 
             title = browser.browser.title
@@ -197,21 +196,24 @@ def run(config):
     while True:
 
         if len(accounts) > 0:
+
+            browser = authenticate(login, password, client)
+
             for account in accounts:
 
                 while True:
-                    if runrun(login, password, client, account):
+                    if runrun(browser, account):
                         break
+                    else:
+                        browser = authenticate(login, password, client)
 
         sleeper.hour('instagram')
 
 
-def runrun(login, password, client, account):
-    browser = authenticate(login, password, client)
-
+def runrun(browser, account):
     hevlog.logging.debug(
-        '[browser] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
-                                               browser.browser.session_id))
+        '[runrun] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
+                                              browser.browser.session_id))
 
     num_of_stories = get_stories(browser, account)
 
@@ -237,11 +239,15 @@ def test_run(config):
     while True:
 
         if len(accounts) > 0:
+
+            browser = authenticate(login, password, client)
+
             for account in accounts:
 
                 while True:
-                    if runrun(login, password, client, account):
+                    if runrun(browser, account):
                         break
+                    else:
+                        browser = authenticate(login, password, client)
 
-                break
-        break
+                    return

@@ -41,8 +41,6 @@ def authenticate(username, password, minio_client=None, retries=None):
 
         browser.browser.get(login_page)
 
-        browser.save_screenshot_to_minio()
-
         hevlog.logging.debug('[authenticate] {}'.format(login_page))
 
         sleeper.seconds('instagram get page', 1)
@@ -118,9 +116,10 @@ def get_stories(authenticated_browser, account):
     # TODO: check if account exists
     browser = authenticated_browser
 
-    browser.browser.get(story)
+    hevlog.logging.debug('[get_stories] {}'.format(story))
 
-    hevlog.logging.debug('[get stories] {}'.format(story))
+    browser.browser.get(story)
+    browser.save_screenshot_to_minio(prefix=account)
 
     if 'Page Not Found' in browser.browser.title:
         hevlog.logging.debug('[get_stories] no stories for {}'.format(account))
@@ -138,10 +137,10 @@ def get_stories(authenticated_browser, account):
                 raise Exception
             num_of_stories += 1
             sleeper.seconds('watch the story for a bit', 1)
-            browser.save_screenshot_to_minio()
+            browser.save_screenshot_to_minio(prefix=account)
         except:
             # TODO: disable browser proxy when done
-            hevlog.logging.debug('[get stories] done: {}'.format(account))
+            hevlog.logging.debug('[get_stories] done: {}'.format(account))
             return num_of_stories
 
 
@@ -250,4 +249,6 @@ def test_run(config):
                     else:
                         browser = authenticate(login, password, client)
 
-                    return
+                    break
+                break
+            break

@@ -58,7 +58,7 @@ def test_save_screenshot_to_public_minio():
     browser = Browser(chrome_headless_nosandbox())
     browser.new_resolution(device_type='800x600')
     browser.browser.get('http://reddit.com/')
-    assert browser.save_screenshot_to_public_minio()
+    assert browser.save_screenshot_to_public_minio(prefix='hello')
     browser.quit()
 
 

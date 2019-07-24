@@ -28,7 +28,7 @@ class Browser:
     def set_minio_client(self, minio_client):
         self.minio_client = minio_client
 
-    def save_screenshot_to_minio(self, url=None, bucket_name='testing', object_name=None):
+    def save_screenshot_to_minio(self, url=None, bucket_name='testing', object_name=None, prefix=None):
 
         if not self.minio_client:
             return False
@@ -37,7 +37,7 @@ class Browser:
             self.browser.get(url)
 
         if not object_name:
-            object_name = screenshot_name(self.browser)
+            object_name = screenshot_name(self.browser, prefix)
 
         sleeper.seconds('Loading page', 4)
 
@@ -51,14 +51,14 @@ class Browser:
 
         return private_minio.put_object(bucket_name, object_name, data, length)
 
-    def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymy', object_name=None):
+    def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymy', object_name=None, prefix=None):
 
         if url:
             self.browser.get(url)
             sleeper.seconds('Loading page', 4)
 
         if not object_name:
-            object_name = screenshot_name(self.browser)
+            object_name = screenshot_name(self.browser, prefix)
 
         png = self.browser.get_screenshot_as_png()
 
@@ -72,14 +72,14 @@ class Browser:
 
         return public_minio.put_object(bucket_name, object_name, data, length)
 
-    def save_screenshot_to_file(self, url=None, object_name=None):
+    def save_screenshot_to_file(self, url=None, object_name=None, prefix=None):
 
         if url:
             self.browser.get(url)
             sleeper.seconds('Loading page', 4)
 
         if not object_name:
-            object_name = screenshot_name(self.browser)
+            object_name = screenshot_name(self.browser, prefix)
 
         path = os.path.abspath('/tmp/hev')
         if not os.path.exists(path):
@@ -294,10 +294,11 @@ def chrome_remote(host='127.0.0.1', port='4444', executor_path='/wd/hub'):
     )
 
 
-def screenshot_name(browser):
+def screenshot_name(browser, prefix=None):
     """Generate a unique filename
 
     :param browser:
+    :param prefix: prefix filename with a string
     :return:
     """
     title = browser.title
@@ -307,6 +308,10 @@ def screenshot_name(browser):
     hostname_ = sanitation.string(hostname)
     title_ = sanitation.string(title)
     timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
+
+    if prefix:
+        prefix = sanitation.string(prefix)
+        return '{}_{}_{}_{}{}'.format(prefix, hostname_, title_, timestamp, '.png')
 
     return '{}_{}_{}{}'.format(hostname_, title_, timestamp, '.png')
 

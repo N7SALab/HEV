@@ -46,7 +46,7 @@ def day(caller):
     return time.sleep(sleep)
 
 
-def range(caller, seconds):
+def time_range(caller, seconds):
     """Sleep for a random range
     """
     sleep = random.choice(range(1, seconds))

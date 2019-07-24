@@ -23,7 +23,7 @@ stages:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
       buildContext: .
-      tag: skynet/hev:v0.2.9
+      tag: skynet/hev:v0.2.10
       pushRemote: true
       registry: registry.world0:5000
     env:

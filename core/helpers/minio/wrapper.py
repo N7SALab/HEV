@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from core.helpers.log import hevlog
 
-hevlog = hevlog('minio', level='error')
+hevlog = hevlog('minio', level='info')
 
 
 class Wrapper:

@@ -194,23 +194,32 @@ def run(config):
     hevlog.logging.info('Running...')
     hevlog.logging.info('[accounts] {}'.format(len(accounts)))
 
-    # authenticate once, reuse same auth
-    browser = authenticate(login, password, client)
-
     while True:
+
         if len(accounts) > 0:
             for account in accounts:
-                hevlog.logging.debug(
-                    '[browser] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
-                                                           browser.browser.session_id))
 
-                num_of_stories = get_stories(browser, account)
-
-                hevlog.logging.info('[{}] {} stories'.format(account, num_of_stories))
-
-                # sleeper.minute('instagram')
+                while True:
+                    if runrun(login, password, client, account):
+                        break
 
         sleeper.hour('instagram')
+
+
+def runrun(login, password, client, account):
+    browser = authenticate(login, password, client)
+
+    hevlog.logging.debug(
+        '[browser] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
+                                               browser.browser.session_id))
+
+    num_of_stories = get_stories(browser, account)
+
+    hevlog.logging.info('[{}] {} stories'.format(account, num_of_stories))
+
+    # sleeper.minute('instagram')
+
+    return True
 
 
 def test_run(config):
@@ -222,21 +231,17 @@ def test_run(config):
     accounts = instagram_config['following']
 
     hevlog.logging.debug('[login] {}'.format(login))
-    hevlog.logging.debug('[accounts] {}'.format(len(accounts)))
+    hevlog.logging.info('Running...')
+    hevlog.logging.info('[accounts] {}'.format(len(accounts)))
 
-    browser = authenticate(login, password, client)
+    while True:
 
-    if len(accounts) > 0:
-        for account in accounts:
-            hevlog.logging.debug(
-                '[browser] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
-                                                       browser.browser.session_id))
+        if len(accounts) > 0:
+            for account in accounts:
 
-            num_of_stories = get_stories(browser, account)
+                while True:
+                    if runrun(login, password, client, account):
+                        break
 
-            hevlog.logging.info('[{}] {} stories'.format(account, num_of_stories))
-
-            # just try one account so it tests faster
-
-            browser.quit()
-            return True
+                break
+        break

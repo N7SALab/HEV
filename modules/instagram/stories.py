@@ -19,6 +19,7 @@ def authenticate(username, password, minio_client=None, retries=None):
 
     :param username: username string
     :param password: password string
+    :param minio_client: minio client
     :param retries: not implemented
     :return: authenticated browser
     """

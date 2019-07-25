@@ -52,3 +52,13 @@ def test_public_upload():
 
     public_minio.make_bucket(bucket_name)
     public_minio.put_object(bucket_name, object_name, data, length)
+
+
+def test_clear_bucket():
+    client = minio.client(CONF['minio-hev'], secure=False)
+    bucket_name = 'testing'
+    client.clear_bucket(bucket_name)
+
+
+if __name__ == "__main__":
+    test_clear_bucket()

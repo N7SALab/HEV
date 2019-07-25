@@ -1,6 +1,7 @@
 import socket
 
 from minio import Minio
+from minio.definitions import Object
 from urllib.parse import urlparse
 
 from core.helpers.log import hevlog
@@ -23,17 +24,17 @@ class Wrapper:
                            region=region,
                            http_client=http_client)
 
-    def download_object(self, bucket, file):
+    def download_object(self, bucket_name, file):
         """ Minio object downloader
         """
-        hevlog.logging.debug('[downloader] Downloading: {}/{}'.format(bucket, file.object_name))
-        return self.Minio.get_object(bucket, file.object_name)
+        hevlog.logging.debug('[downloader] Downloading: {}/{}'.format(bucket_name, file.object_name))
+        return self.Minio.get_object(bucket_name, file.object_name)
 
-    def list_all_objects(self, bucket, folder, recursive=True):
+    def list_all_objects(self, bucket_name, folder=None, recursive=True):
         """ List Minio objects
         """
-        hevlog.logging.debug('[list_all_objects] bucket: {}, folder: {}'.format(bucket, folder))
-        return self.Minio.list_objects_v2(bucket, folder, recursive=recursive)
+        hevlog.logging.debug('[list_all_objects] bucket: {}, folder: {}'.format(bucket_name, folder))
+        return self.Minio.list_objects_v2(bucket_name, folder, recursive=recursive)
 
     def put_object(self, bucket_name, object_name, data, length,
                    content_type='application/octet-stream',
@@ -57,6 +58,18 @@ class Wrapper:
                 '[put_object] Unable to save {}/{}/{}'.format(self.Minio._endpoint_url, bucket_name, object_name))
 
             return False
+
+    def clear_bucket(self, bucket_name, folder=None):
+        objects = self.list_all_objects(bucket_name, folder)
+
+        for Object in objects:
+            name = Object.object_name
+            self.Minio.remove_object(bucket_name, name)
+            hevlog.logging.info('deleted {}'.format(name))
+
+    def remove_object(self, bucket_name, Object):
+        self.Minio.remove_object(bucket_name, Object.object_name)
+        hevlog.logging.debug('deleted {}'.format(Object.name))
 
     def make_bucket(self, bucket_name):
         try:

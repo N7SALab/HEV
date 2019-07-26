@@ -103,7 +103,7 @@ def authenticate(username, password, minio_client=None, retries=None):
     hevlog.logging.debug(
         '[authenticated browser] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
                                                              browser.browser.session_id))
-    browser.save_screenshot_to_minio()
+    browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/')
 
     return browser
 
@@ -120,7 +120,7 @@ def get_stories(authenticated_browser, account):
     hevlog.logging.debug('[get_stories] {}'.format(story))
 
     browser.browser.get(story)
-    browser.save_screenshot_to_minio(prefix=account)
+    browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
 
     if 'Page Not Found' in browser.browser.title:
         hevlog.logging.debug('[get_stories] no stories for {}'.format(account))
@@ -137,8 +137,9 @@ def get_stories(authenticated_browser, account):
                 hevlog.logging.debug(('[get_stories] {} end of stories'.format(account)))
                 raise Exception
             num_of_stories += 1
+            browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
             sleeper.seconds('watch the story for a bit', 1)
-            browser.save_screenshot_to_minio(prefix=account)
+            browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
         except:
             # TODO: disable browser proxy when done
             hevlog.logging.debug('[get_stories] done: {}'.format(account))

@@ -56,7 +56,7 @@ def disabled_test_chrome_remote():
 
 def test_save_screenshot_to_public_minio():
     browser = Browser(chrome_headless_nosandbox())
-    browser.new_resolution(device_type='800x600')
+    browser.new_resolution(device_type='1024x768')
     browser.browser.get('http://reddit.com/')
     assert browser.save_screenshot_to_public_minio(prefix='hello')
     browser.quit()
@@ -67,7 +67,7 @@ def test_save_screenshot_to_minio():
     assert client is not None
 
     browser = Browser(chrome_headless_nosandbox())
-    browser.new_resolution(device_type='800x600')
+    browser.new_resolution(device_type='1024x768')
     browser.browser.get('http://reddit.com/')
     browser.set_minio_client(client)
     assert browser.save_screenshot_to_minio()
@@ -76,7 +76,7 @@ def test_save_screenshot_to_minio():
 
 def test_save_screenshot_to_file():
     browser = Browser(chrome_headless_nosandbox())
-    browser.new_resolution(device_type='800x600')
+    browser.new_resolution(device_type='1024x768')
     assert browser.save_screenshot_to_file('http://google.com')
     browser.quit()
 

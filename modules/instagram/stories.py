@@ -37,6 +37,8 @@ def authenticate(username, password, minio_client=None, retries=None):
         # browser = Browser(chrome_headless_sandboxed())
         # browser = Browser(chrome_remote())
 
+        browser.new_resolution('1024x768')
+
         if minio_client:
             browser.set_minio_client(minio_client)
 

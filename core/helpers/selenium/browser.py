@@ -28,7 +28,7 @@ class Browser:
     def set_minio_client(self, minio_client):
         self.minio_client = minio_client
 
-    def save_screenshot_to_minio(self, url=None, bucket_name='screenshots', object_name=None, prefix=None):
+    def save_screenshot_to_minio(self, url=None, bucket_name='testing', object_name=None, prefix=None):
 
         if not self.minio_client:
             return False
@@ -51,7 +51,7 @@ class Browser:
 
         return private_minio.put_object(bucket_name, object_name, data, length)
 
-    def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymyscreenshots', object_name=None,
+    def save_screenshot_to_public_minio(self, url=None, bucket_name='mymymymymytesting', object_name=None,
                                         prefix=None):
 
         if url:
@@ -82,7 +82,7 @@ class Browser:
         if not object_name:
             object_name = screenshot_name(self.browser, prefix)
 
-        path = os.path.abspath('/tmp/hev')
+        path = os.path.abspath('/tmp/hev/testing')
         if not os.path.exists(path):
             os.makedirs(path)
 

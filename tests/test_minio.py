@@ -58,6 +58,8 @@ def test_clear_bucket():
     client = minio.client(CONF['minio-hev'], secure=False)
     bucket_name = 'testing'
     client.clear_bucket(bucket_name)
+    bucket_name = 'screenshots'
+    client.clear_bucket(bucket_name)
 
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ docker tag $DOCKERNAME:$DOCKERTAG $DOCKERNAME:latest
 docker run --rm --shm-size 2g --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests"
 
 # push image
-REGISTRY="rancher.n7sa.com:5000"
+REGISTRY="registry.n7sa.com"
 docker tag $DOCKERNAME $REGISTRY/$DOCKERNAME:$DOCKERTAG
 docker tag $DOCKERNAME $REGISTRY/$DOCKERNAME:latest
 docker push $REGISTRY/$DOCKERNAME:$DOCKERTAG

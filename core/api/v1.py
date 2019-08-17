@@ -12,7 +12,7 @@ import json
 from flask import (Flask, request, redirect, render_template)
 
 from core.helpers.log import hevlog
-from core.helpers.crypto import secret
+from core.helpers import crypto
 from core.helpers.neo4j import Neo4jWrapper
 
 from core.helpers import flask as f
@@ -22,7 +22,7 @@ hevlog = hevlog('hevapi', level='debug')
 
 # Initializing app
 app = Flask(__name__, template_folder='../../web/templates', static_folder='../../web/static')
-app.secret_key = secret.new_secret_key()
+app.secret_key = crypto.new_secret_key()
 app.jinja_options = f.javascript_compatibility(app)
 
 

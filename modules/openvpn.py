@@ -179,7 +179,7 @@ def create_configs(minio_client, bucket, client_configs, ca, cert, key, ta, host
         hevlog.logging.debug('[create_configs] OpenVPN client config uploaded: {}'.format(config_name))
 
 
-def run(minio_config, openvpn_config):
+def build_client_configs(minio_config, openvpn_config):
     hevlog.logging.info('Running...')
 
     while True:
@@ -210,7 +210,7 @@ def run(minio_config, openvpn_config):
         sleeper.day('openvpn')
 
 
-def test_run(minio_config, openvpn_config):
+def build_client_configs_test(minio_config, openvpn_config):
     while True:
         minio_client = minio.client(minio_config, secure=False)
 

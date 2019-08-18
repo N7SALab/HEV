@@ -9,4 +9,4 @@ except:
 
 
 def test_openpvn():
-    assert openvpn.test_run(CONF['minio'], CONF['openvpn']) is True
+    assert openvpn.build_client_configs_test(CONF['minio'], CONF['openvpn']) is True

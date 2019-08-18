@@ -15,18 +15,12 @@ import json
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import (ThreadPoolExecutor)
 
-import core
 import modules
 
-from modules import openvpn
-from modules import instagram
-
-from core import api
-from core.helpers import elasticsearch
+from core import (api, helpers)
 from core.helpers.log import hevlog
 
 hevlog = hevlog('hev', level='debug')
-
 
 try:
     CONF = json.load(open('/var/www/hev.conf'))
@@ -40,8 +34,8 @@ def bootstrap():
     pool = ThreadPoolExecutor(4)
 
     futures = [
-        pool.submit(core.helpers.elasticsearch.index_cleanup.run, CONF['elasticsearch']),
-        pool.submit(modules.openvpn.build_client_configs.run, CONF['minio'], CONF['openvpn']),
+        pool.submit(helpers.elasticsearch.clean_indexes, CONF['elasticsearch']),
+        pool.submit(modules.openvpn.build_client_configs, CONF['minio'], CONF['openvpn']),
         pool.submit(modules.instagram.run, CONF),
     ]
 
@@ -65,4 +59,3 @@ if __name__ == "__main__":
 
     # hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
     hevlog.logging.debug('[main] all processes exited')
-

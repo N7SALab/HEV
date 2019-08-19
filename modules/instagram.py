@@ -184,7 +184,7 @@ def get_page(authenticated_browser, account):
     return browser.browser.get(page)
 
 
-def run(config):
+def run_instagram_stories(config):
     client = minio.client(config['minio-hev'], secure=False)
 
     instagram_config = config['instagram']

@@ -1,1 +1,1 @@
-from . import (elasticsearch, cpu, crypto)
+from . import (elasticsearch, cpu, crypto, logger)

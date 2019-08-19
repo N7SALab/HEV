@@ -1,6 +1,6 @@
 import psutil
 
-from core.helpers.log import hevlog
+from core.helpers.logger import hevlog
 
 hevlog = hevlog('cpu', level='debug')
 

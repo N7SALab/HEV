@@ -18,7 +18,7 @@ from concurrent.futures import (ThreadPoolExecutor)
 import modules
 
 from core import (api, helpers)
-from core.helpers.log import hevlog
+from core.helpers.logger import hevlog
 
 hevlog = hevlog('hev', level='debug')
 

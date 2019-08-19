@@ -9,7 +9,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from urllib.parse import urlparse
 
 from core.helpers import sanitation
-from core.helpers.log import hevlog
+from core.helpers.logger import hevlog
 from core.helpers.sleep import sleeper
 from core.helpers.selenium import options
 

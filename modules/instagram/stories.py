@@ -1,7 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-from core.helpers.log import hevlog
+from core.helpers.logger import hevlog
 from core.helpers.sleep import sleeper
 from core.helpers.selenium.browser import (Browser, chrome_nosandbox, chrome_headless_nosandbox,
                                            chrome, chrome_for_docker, chrome_headless_nosandbox_bigshm,

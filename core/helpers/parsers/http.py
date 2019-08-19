@@ -1,4 +1,6 @@
-from core.helpers.neo4j import helpers
+from core.helpers import neo4j
+
+
 # from core.helpers import crypto
 
 
@@ -12,4 +14,4 @@ def http_header(headers):
         label='Headers'
     )
 
-    helpers.prepare_dict(**args)
+    neo4j.prepare_dict(**args)

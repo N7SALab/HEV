@@ -24,6 +24,10 @@ RUN browser="google-chrome.deb" \
     && apt autoclean \
     && rm -rf * 
 
+# Install wifite2
+RUN git clone https://github.com/derv82/wifite2 \
+    && cd wifite2 \
+    && python3 setup.py install
 
 WORKDIR /hev
 

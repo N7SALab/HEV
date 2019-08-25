@@ -33,13 +33,13 @@ class MinioWrapper:
     def download_object(self, bucket_name, file):
         """ Minio object downloader
         """
-        hevlog.logging.debug('[downloader] Downloading: {}/{}'.format(bucket_name, file.object_name))
+        Hevlog.logging.debug('[downloader] Downloading: {}/{}'.format(bucket_name, file.object_name))
         return self.Minio.get_object(bucket_name, file.object_name)
 
     def list_all_objects(self, bucket_name, folder=None, recursive=True):
         """ List Minio objects
         """
-        hevlog.logging.debug('[list_all_objects] bucket: {}, folder: {}'.format(bucket_name, folder))
+        Hevlog.logging.debug('[list_all_objects] bucket: {}, folder: {}'.format(bucket_name, folder))
         return self.Minio.list_objects_v2(bucket_name, folder, recursive=recursive)
 
     def put_object(self, bucket_name, object_name, data, length,
@@ -49,18 +49,18 @@ class MinioWrapper:
         """ Minio object uploader
         """
 
-        hevlog.logging.debug('[put_object] Uploading: {}'.format(object_name))
+        Hevlog.logging.debug('[put_object] Uploading: {}'.format(object_name))
         try:
             self.Minio.put_object(bucket_name, object_name, data, length,
                                   content_type=content_type,
                                   metadata=metadata, sse=sse, progress=progress)
-            hevlog.logging.info(
+            Hevlog.logging.info(
                 '[put_object] Saved to {}/{}/{}'.format(self.Minio._endpoint_url, bucket_name, object_name))
 
             return True
 
         except:
-            hevlog.logging.error(
+            Hevlog.logging.error(
                 '[put_object] Unable to save {}/{}/{}'.format(self.Minio._endpoint_url, bucket_name, object_name))
 
             return False
@@ -71,21 +71,21 @@ class MinioWrapper:
         for Object in objects:
             name = Object.object_name
             self.Minio.remove_object(bucket_name, name)
-            hevlog.logging.info('deleted {}'.format(name))
+            Hevlog.logging.info('deleted {}'.format(name))
 
     def remove_object(self, bucket_name, Object):
         self.Minio.remove_object(bucket_name, Object.object_name)
-        hevlog.logging.debug('deleted {}'.format(Object.name))
+        Hevlog.logging.debug('deleted {}'.format(Object.name))
 
     def make_bucket(self, bucket_name):
         try:
             self.Minio.make_bucket(bucket_name)
-            hevlog.logging.debug('[make_bucket] Created bucket: {}'.format(bucket_name))
+            Hevlog.logging.debug('[make_bucket] Created bucket: {}'.format(bucket_name))
 
             return True
 
         except:
-            hevlog.logging.debug('[make_bucket] Bucket exists: {}'.format(bucket_name))
+            Hevlog.logging.debug('[make_bucket] Bucket exists: {}'.format(bucket_name))
 
             return False
 

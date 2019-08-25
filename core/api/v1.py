@@ -11,13 +11,13 @@ import json
 
 from flask import (Flask, request, redirect, render_template)
 
-from core.helpers.logger import hevlog
+from core.helpers.logger import Hevlog
 from core.helpers import crypto
 from core.helpers.neo4j import Neo4jWrapper
 
 from core.helpers import flask as f
 
-hevlog = hevlog('hevapi', level='debug')
+hevlog = Hevlog('hevapi', level='debug')
 
 
 # Initializing app
@@ -37,7 +37,7 @@ def load_user(user_id):
 def home(**args):
     """ Default home route
     """
-    hevlog.logging.info('[home] request: {}'.format(request))
+    Hevlog.logging.info('[home] request: {}'.format(request))
     start = int(time.time())
 
     # process and send headers
@@ -57,7 +57,7 @@ def home(**args):
 
     authenticated, error = f.login(request)
 
-    hevlog.logging.debug('[home] Flask routing took: {} seconds'.format(int(time.time()) - start))
+    Hevlog.logging.debug('[home] Flask routing took: {} seconds'.format(int(time.time()) - start))
 
     return render_template('home.html', **locals())
 
@@ -66,7 +66,7 @@ def home(**args):
 def login():
     """ User login page
     """
-    hevlog.logging.info('[login] request: {}'.format(request))
+    Hevlog.logging.info('[login] request: {}'.format(request))
 
     title = 'Hunt Everything'
 
@@ -87,7 +87,7 @@ def logout():
 
     :return: executes flask_login.logout_user in browser session
     """
-    hevlog.logging.info('[logout] request: {}'.format(request))
+    Hevlog.logging.info('[logout] request: {}'.format(request))
 
     logout()
 
@@ -108,7 +108,7 @@ def info():
 
 async def hev():
     # this doesn't work as expected
-    hevlog.logging.info('[hev] HEV is starting')
+    Hevlog.logging.info('[hev] HEV is starting')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)
@@ -119,7 +119,7 @@ def statichev(neo4j_config):
     global n
     n = Neo4jWrapper(neo4j_config)
 
-    hevlog.logging.info('[statichev] HEV is starting')
+    Hevlog.logging.info('[statichev] HEV is starting')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)

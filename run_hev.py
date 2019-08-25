@@ -18,9 +18,9 @@ from concurrent.futures import (ThreadPoolExecutor)
 import modules
 
 from core import (api, helpers)
-from core.helpers.logger import hevlog
+from core.helpers.logger import Hevlog
 
-hevlog = hevlog('hev', level='debug')
+hevlog = Hevlog('hev', level='debug')
 
 try:
     CONF = json.load(open('/var/www/hev.conf'))
@@ -29,7 +29,7 @@ except:
 
 
 def bootstrap():
-    hevlog.logging.info('[bootstrap] Starting...')
+    Hevlog.logging.info('[bootstrap] Starting...')
 
     pool = ThreadPoolExecutor(4)
 
@@ -40,10 +40,10 @@ def bootstrap():
     ]
 
     for future in futures:
-        hevlog.logging.debug('[bootstrap] {} {}'.format(future, future.exception()))
+        Hevlog.logging.debug('[bootstrap] {} {}'.format(future, future.exception()))
 
-    # hevlog.logging.debug('[bootstrap] {}'.format(wait(futures)))
-    hevlog.logging.debug('[bootstrap] all futures exited')
+    # Hevlog.logging.debug('[bootstrap] {}'.format(wait(futures)))
+    Hevlog.logging.debug('[bootstrap] all futures exited')
 
 
 if __name__ == "__main__":
@@ -57,5 +57,5 @@ if __name__ == "__main__":
     for future in futureProcesses:
         hevlog.logging.debug('[main] {} {}'.format(future, future.exception()))
 
-    # hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
+    # Hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
     hevlog.logging.debug('[main] all processes exited')

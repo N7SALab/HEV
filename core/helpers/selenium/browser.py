@@ -9,13 +9,13 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from urllib.parse import urlparse
 
 from core.helpers import sanitation
-from core.helpers.logger import hevlog
+from core.helpers.logger import Hevlog
 from core.helpers.sleep import sleeper
 from core.helpers.selenium import options
 
 from core.helpers.minio import use_public_server
 
-hevlog = hevlog('selenium', level='info')
+hevlog = Hevlog('selenium', level='info')
 
 
 class Browser:
@@ -286,7 +286,7 @@ def chrome_remote(host='127.0.0.1', port='4444', executor_path='/wd/hub'):
     """Remote Selenium
 
     """
-    hevlog.logging.info(
+    Hevlog.logging.info(
         'Remote WebDriver Hub URL: http://{}:{}{}/static/resource/hub.html'.format(host, port, executor_path))
 
     return webdriver.Remote(

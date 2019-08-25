@@ -1,7 +1,7 @@
-from core.helpers.logger import hevlog
+from core.helpers.logger import Hevlog
 
-hevlog = hevlog('pytest', level='debug')
+hevlog = Hevlog('pytest', level='debug')
 
 
 def test_hevlog():
-    assert hevlog
+    assert Hevlog

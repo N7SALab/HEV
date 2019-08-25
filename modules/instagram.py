@@ -1,7 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
-from core.helpers.logger import hevlog
+from core.helpers.logger import Hevlog
 from core.helpers.sleep import sleeper
 from core.helpers.selenium.browser import (Browser, chrome_nosandbox, chrome_headless_nosandbox,
                                            chrome, chrome_for_docker, chrome_headless_nosandbox_bigshm,
@@ -11,7 +11,7 @@ from core.helpers.selenium.browser import (Browser, chrome_nosandbox, chrome_hea
 
 from core.helpers import minio
 
-hevlog = hevlog('instagram', level='info')
+hevlog = Hevlog('instagram', level='info')
 
 
 def authenticate(username, password, minio_client=None, retries=None):
@@ -44,7 +44,7 @@ def authenticate(username, password, minio_client=None, retries=None):
 
         browser.browser.get(login_page)
 
-        hevlog.logging.debug('[authenticate] {}'.format(login_page))
+        Hevlog.logging.debug('[authenticate] {}'.format(login_page))
 
         sleeper.seconds('instagram get page', 1)
 
@@ -89,9 +89,9 @@ def authenticate(username, password, minio_client=None, retries=None):
         if found_pass and found_btn:
             break
         else:
-            hevlog.logging.error('[browser] Authentication failed')
+            Hevlog.logging.error('[browser] Authentication failed')
 
-            hevlog.logging.debug(
+            Hevlog.logging.debug(
                 '[browser] Found password field: {} Found login button: {}'.format(browser.browser.name, found_pass,
                                                                                    found_btn))
 
@@ -102,7 +102,7 @@ def authenticate(username, password, minio_client=None, retries=None):
 
     sleeper.seconds('wait for instagram to log in', 5)
 
-    hevlog.logging.debug(
+    Hevlog.logging.debug(
         '[authenticated browser] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
                                                              browser.browser.session_id))
     browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/')
@@ -119,13 +119,13 @@ def get_stories(authenticated_browser, account):
     # TODO: check if account exists
     browser = authenticated_browser
 
-    hevlog.logging.debug('[get_stories] {}'.format(story))
+    Hevlog.logging.debug('[get_stories] {}'.format(story))
 
     browser.browser.get(story)
     browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
 
     if 'Page Not Found' in browser.browser.title:
-        hevlog.logging.debug('[get_stories] no stories for {}'.format(account))
+        Hevlog.logging.debug('[get_stories] no stories for {}'.format(account))
         return num_of_stories
 
     sleeper.seconds('instagram', 2)
@@ -136,7 +136,7 @@ def get_stories(authenticated_browser, account):
 
             title = browser.browser.title
             if title == 'Instagram':
-                hevlog.logging.debug(('[get_stories] {} end of stories'.format(account)))
+                Hevlog.logging.debug(('[get_stories] {} end of stories'.format(account)))
                 raise Exception
             num_of_stories += 1
             browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
@@ -144,7 +144,7 @@ def get_stories(authenticated_browser, account):
             browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
         except:
             # TODO: disable browser proxy when done
-            hevlog.logging.debug('[get_stories] done: {}'.format(account))
+            Hevlog.logging.debug('[get_stories] done: {}'.format(account))
             return num_of_stories
 
 
@@ -163,14 +163,14 @@ def next_story(authenticated_browser):
             browser = authenticated_browser
             button = browser.browser.find_element_by_xpath(xpath)
             found_btn = True
-            hevlog.logging.debug('[next_story] next story')
+            Hevlog.logging.debug('[next_story] next story')
             return button.click()
         except:
             pass
 
     if not found_btn:
         # no more stories. exit
-        hevlog.logging.debug('[next_story] no more stories')
+        Hevlog.logging.debug('[next_story] no more stories')
         raise Exception
 
 
@@ -178,7 +178,7 @@ def get_page(authenticated_browser, account):
     """ Get page
     """
     # TODO: need to download page
-    hevlog.logging.debug('[get_page] getting {}'.format(account))
+    Hevlog.logging.debug('[get_page] getting {}'.format(account))
     page = 'https://instagram.com/{}'.format(account)
     browser = authenticated_browser
     return browser.browser.get(page)
@@ -192,9 +192,9 @@ def run_instagram_stories(config):
     password = instagram_config['login']['password']
     accounts = instagram_config['following']
 
-    hevlog.logging.debug('[login] {}'.format(login))
-    hevlog.logging.info('Running...')
-    hevlog.logging.info('[accounts] {}'.format(len(accounts)))
+    Hevlog.logging.debug('[login] {}'.format(login))
+    Hevlog.logging.info('Running...')
+    Hevlog.logging.info('[accounts] {}'.format(len(accounts)))
 
     while True:
 
@@ -214,13 +214,13 @@ def run_instagram_stories(config):
 
 
 def runrun(browser, account):
-    hevlog.logging.debug(
+    Hevlog.logging.debug(
         '[runrun] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
                                               browser.browser.session_id))
 
     num_of_stories = get_stories(browser, account)
 
-    hevlog.logging.info('[{}] {} stories'.format(account, num_of_stories))
+    Hevlog.logging.info('[{}] {} stories'.format(account, num_of_stories))
 
     # sleeper.minute('instagram')
 
@@ -235,9 +235,9 @@ def test_run(config):
     password = instagram_config['login']['password']
     accounts = instagram_config['following']
 
-    hevlog.logging.debug('[login] {}'.format(login))
-    hevlog.logging.info('Running...')
-    hevlog.logging.info('[accounts] {}'.format(len(accounts)))
+    Hevlog.logging.debug('[login] {}'.format(login))
+    Hevlog.logging.info('Running...')
+    Hevlog.logging.info('[accounts] {}'.format(len(accounts)))
 
     while True:
 

@@ -11,7 +11,7 @@ import subprocess
 
 from subprocess import STDOUT
 
-from core.helpers.sanitation.lists import dedup_list
+from core.helpers.sanitation import Sanitation
 
 
 class Wireless:
@@ -85,7 +85,7 @@ class Wireless:
         if os.path.exists(path):
             devices.extend(os.listdir(path))
 
-        return dedup_list(devices)
+        return Sanitation.dedup(devices)
 
     def _sonar(self):
         """

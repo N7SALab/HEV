@@ -1,9 +1,8 @@
 import os
 import io
 
-from core.helpers import minio
+from core.helpers import minio, sleeper
 from core.helpers.logger import Hevlog
-from core.helpers.sleep import sleeper
 
 hevlog = Hevlog('openvpn', level='info')
 

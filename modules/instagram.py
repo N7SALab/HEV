@@ -2,14 +2,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
 from core.helpers.logger import Hevlog
-from core.helpers.sleep import sleeper
-from core.helpers.selenium.browser import (Browser, chrome_nosandbox, chrome_headless_nosandbox,
-                                           chrome, chrome_for_docker, chrome_headless_nosandbox_bigshm,
-                                           chrome_headless_nosandbox_noshm, chrome_headless_nosandbox_unsafe,
-                                           chrome_headless_sandboxed, chrome_remote, chrome_sandboxed,
-                                           click, type)
+from core.helpers.selenium.browser import (Browser, chrome_for_docker)
 
-from core.helpers import minio
+from core.helpers import minio, sleeper
 
 hevlog = Hevlog('instagram', level='info')
 

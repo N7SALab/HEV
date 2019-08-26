@@ -1,16 +1,12 @@
 import json
 import warnings
 
-from core.helpers.sleep import sleeper
-
 from core.helpers import minio
 
 from core.helpers.selenium.browser import (Browser, chrome_sandboxed, chrome_remote,
-                                           chrome_headless_sandboxed, chrome_headless_nosandbox_unsafe,
-                                           chrome_headless_nosandbox_noshm, chrome_headless_nosandbox_bigshm,
-                                           chrome_for_docker, chrome, chrome_headless_nosandbox,
+                                           chrome_headless_sandboxed, chrome_for_docker, chrome, chrome_headless_nosandbox,
                                            chrome_nosandbox,
-                                           click, type
+                                           click
                                            )
 
 try:

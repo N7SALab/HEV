@@ -8,9 +8,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from urllib.parse import urlparse
 
-from core.helpers import sanitation
+from core.helpers import sanitation, sleeper
 from core.helpers.logger import Hevlog
-from core.helpers.sleep import sleeper
 from core.helpers.selenium import options
 
 from core.helpers.minio import use_public_server

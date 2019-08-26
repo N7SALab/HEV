@@ -4,7 +4,7 @@ import elasticsearch
 
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
-from core.helpers.sleep import sleeper
+from core.helpers import sleeper
 from core.helpers.logger import Hevlog
 
 hevlog = Hevlog('elasticsearch', level='info')

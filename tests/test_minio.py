@@ -36,12 +36,12 @@ def test_client():
 
 
 def test_Wrapper():
-    assert minio.Wrapper('minio.000000', access_key=None,
-                         secret_key=None,
-                         session_token=None,
-                         secure=True,
-                         region=None,
-                         http_client=None).Minio is not None
+    assert minio.MinioWrapper('minio.000000', access_key=None,
+                              secret_key=None,
+                              session_token=None,
+                              secure=True,
+                              region=None,
+                              http_client=None).Minio is not None
 
 
 public_minio = minio.use_public_server()

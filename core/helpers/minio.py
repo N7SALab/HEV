@@ -9,7 +9,7 @@ from core.helpers.hevlog import Hevlog
 hevlog = Hevlog('minio', level='info')
 
 
-class Wrapper:
+class MinioWrapper:
 
     def __init__(self, endpoint, access_key=None,
                  secret_key=None,
@@ -88,13 +88,13 @@ def client(MINIO_CONF, secure=True, session_token=None, region=None, http_client
     for host in MINIO_CONF['host']:
         endpoint = urlparse(host)
         if check_connection(endpoint.hostname, endpoint.port):
-            return Wrapper(endpoint=endpoint.netloc,
-                           access_key=MINIO_CONF['access_key'],
-                           secret_key=MINIO_CONF['secret_key'],
-                           secure=secure,
-                           session_token=session_token,
-                           region=region,
-                           http_client=http_client)
+            return MinioWrapper(endpoint=endpoint.netloc,
+                                access_key=MINIO_CONF['access_key'],
+                                secret_key=MINIO_CONF['secret_key'],
+                                secure=secure,
+                                session_token=session_token,
+                                region=region,
+                                http_client=http_client)
 
 
 def check_connection(host, port):
@@ -109,5 +109,5 @@ def check_connection(host, port):
 
 
 def use_public_server():
-    return Wrapper('play.minio.io:9000', 'Q3AM3UQ867SPQQA43P2F',
-                   'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG')
+    return MinioWrapper('play.minio.io:9000', 'Q3AM3UQ867SPQQA43P2F',
+                        'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG')

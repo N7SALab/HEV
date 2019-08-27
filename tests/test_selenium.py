@@ -51,7 +51,7 @@ def disabled_test_chrome_remote():
 
 def test_save_screenshot_to_public_minio():
     browser = Browser(chrome_headless_nosandbox())
-    browser.new_resolution(device_type='1024x768')
+    browser.new_resolution(device_type='web-small')
     browser.browser.get('http://reddit.com/')
     assert browser.save_screenshot_to_public_minio(prefix='hello')
     browser.quit()

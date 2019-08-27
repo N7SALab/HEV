@@ -3,9 +3,9 @@ import json
 from modules import instagram
 
 try:
-    CONF = json.load(open('hev.conf'))
+    CONF = json.load(open('/hev/hev-conf.json'))
 except:
-    CONF = json.load(open('../hev.conf'))
+    CONF = json.load(open('../hev-conf.json'))
 
 
 def test_run():

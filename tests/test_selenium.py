@@ -9,9 +9,9 @@ from core.helpers.selenium import (Browser, chrome_sandboxed, chrome_remote,
                                    chrome_nosandbox)
 
 try:
-    CONF = json.load(open('hev.conf'))
+    CONF = json.load(open('/hev/hev-conf.json'))
 except:
-    CONF = json.load(open('../hev.conf'))
+    CONF = json.load(open('../hev-conf.json'))
 
 
 def test_chrome_for_docker():

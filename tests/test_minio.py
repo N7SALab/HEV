@@ -5,9 +5,9 @@ import datetime
 from core.helpers import minio
 
 try:
-    CONF = json.load(open('hev.conf'))
+    CONF = json.load(open('/hev/hev-conf.json'))
 except:
-    CONF = json.load(open('../hev.conf'))
+    CONF = json.load(open('../hev-conf.json'))
 
 
 def test_Client():
@@ -63,4 +63,5 @@ def test_clear_bucket():
 
 
 if __name__ == "__main__":
+    test_Client()
     test_clear_bucket()

@@ -22,7 +22,7 @@ RUN browser="google-chrome.deb" \
     && dpkg -i "$browser" \
     || apt install -f -y \
     && apt autoclean \
-    && rm -rf * 
+    && rm -rf *
 
 # Install wifite2
 RUN git clone https://github.com/derv82/wifite2 \
@@ -38,7 +38,7 @@ COPY tests tests
 COPY web web
 COPY run_hev.py .
 COPY requirements.txt .
-COPY hev.conf .
+COPY hev-conf.json .
 
 # Install python packages
 RUN python3 -m pip install -r requirements.txt
@@ -49,4 +49,3 @@ VOLUME "/hev/modules/youuuuuuutubedl/files"
 
 # run app
 ENTRYPOINT ["python3", "run_hev.py"]
-

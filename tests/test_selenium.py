@@ -3,12 +3,10 @@ import warnings
 
 from core.helpers import minio
 
-from core.helpers.selenium.browser import (Browser, chrome_sandboxed, chrome_remote,
-                                           chrome_headless_sandboxed, chrome_for_docker, chrome,
-                                           chrome_headless_nosandbox,
-                                           chrome_nosandbox,
-                                           click
-                                           )
+from core.helpers.selenium import (Browser, chrome_sandboxed, chrome_remote,
+                                   chrome_headless_sandboxed, chrome_for_docker, chrome,
+                                   chrome_headless_nosandbox,
+                                   chrome_nosandbox)
 
 try:
     CONF = json.load(open('hev.conf'))
@@ -74,7 +72,7 @@ def test_save_screenshot_to_minio():
 def test_save_screenshot_to_file():
     browser = Browser(chrome_headless_nosandbox())
     browser.new_resolution(device_type='1024x768')
-    assert browser.save_screenshot_to_file('http://google.com')
+    assert browser.save_screenshot_to_file('http://1.1.1.1')
     browser.quit()
 
 
@@ -82,9 +80,9 @@ def test_click():
     browser = Browser(chrome_for_docker())
     browser.browser.get('https://reddit.com')
     browser.save_screenshot_to_file()
-    click(browser.browser, '//*[@id="USER_DROPDOWN_ID"]')
+    browser.click('//*[@id="USER_DROPDOWN_ID"]')
     browser.save_screenshot_to_file()
-    click(browser.browser, '/html/body/div[4]/div/button')
+    browser.click('/html/body/div[4]/div/button')
     browser.save_screenshot_to_file()
     browser.quit()
 
@@ -96,4 +94,4 @@ def test_type():
 
 
 if __name__ == "__main__":
-    test_click()
+    test_save_screenshot_to_file()

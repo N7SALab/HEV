@@ -2,7 +2,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
 from core.helpers.logger import Hevlog
-from core.helpers.selenium.browser import (Browser, chrome_for_docker)
+from core.helpers.selenium import (Browser, chrome_for_docker)
 
 from core.helpers import minio, sleeper
 

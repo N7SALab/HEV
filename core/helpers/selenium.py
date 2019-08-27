@@ -11,7 +11,6 @@ from urllib.parse import urlparse
 from core.helpers import sleeper
 from core.helpers.sanitation import Sanitation
 from core.helpers.logger import Hevlog
-from core.helpers.selenium import options
 
 from core.helpers.minio import use_public_server
 
@@ -22,6 +21,7 @@ class Browser:
 
     def __init__(self, browser=None, webdriver=webdriver):
         self.webdriver = webdriver
+        # default to chrome browser
         self.browser = browser if browser else self.webdriver.Chrome()
         self.minio_client = None
 
@@ -140,30 +140,80 @@ class Browser:
         self.browser.quit()
         self.browser.stop_client()
 
+    def click(self, xpath):
+        """Given an xpath, it will click it
 
-def click(browser, xpath):
-    """Given an xpath, it will click it
+        :param xpath: chrome xpath
+        :return:
+        """
+        element = self.browser.find_element_by_xpath(xpath)
+        return element.click()
 
-    :param browser: selenium browser
-    :param xpath: chrome xpath
-    :return:
-    """
-    element = browser.find_element_by_xpath(xpath)
-    return element.click()
+    def type(self, keys):
+        """Given a browser and a list of keys to perform
+
+        :param keys: list of keys
+        :return: perform list of keys
+        """
+        actions = ActionChains(self.browser)
+        for key in keys:
+            actions.send_keys(key)
+
+        return actions.perform()
 
 
-def type(browser, keys):
-    """Given a browser and a list of keys to perform
+class Options:
 
-    :param browser: browser
-    :param keys: list of keys
-    :return: perform list of keys
-    """
-    actions = ActionChains(browser)
-    for key in keys:
-        actions.send_keys(key)
+    @staticmethod
+    def default(browser_options):
+        browser_options.add_argument('start-maximized')
+        return browser_options
 
-    return actions.perform()
+    @staticmethod
+    def unsafe(browser_options):
+        warnings.warn('Certificates are not verified', Warning)
+        browser_options.add_argument('--ignore-certificate-errors')
+        return browser_options
+
+    @staticmethod
+    def nosandbox(browser_options):
+        browser_options.add_argument('--no-sandbox')
+        return browser_options
+
+    @staticmethod
+    def headless(browser_options):
+        browser_options.add_argument('headless')
+        return browser_options
+
+    @staticmethod
+    def noshm(browser_options):
+        warnings.warn('Disabled shm will use disk I/O, and will be slow', Warning)
+        browser_options.add_argument('--disable-dev-shm-usage')
+        return browser_options
+
+    @staticmethod
+    def bigshm(browser_options):
+        warnings.warn('Big shm not yet implemented', Warning)
+        return browser_options
+
+    @staticmethod
+    def noinfobars(browser_options):
+        browser_options.add_argument("--disable-infobars")
+        return browser_options
+
+    @staticmethod
+    def noextensions(browser_options):
+        browser_options.add_argument("--disable-extensions")
+        return browser_options
+
+    @staticmethod
+    def nonotifications(browser_options):
+        # Pass the argument 1 to allow and 2 to block
+        browser_options.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.notifications": 1
+        })
+
+        return browser_options
 
 
 def chrome():
@@ -173,7 +223,7 @@ def chrome():
     warnings.warn('Docker does not support sandbox option')
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    opt = options.default(webdriver.ChromeOptions())
+    opt = Options.default(webdriver.ChromeOptions())
 
     return webdriver.Chrome(options=opt)
 
@@ -182,12 +232,12 @@ def chrome_for_docker():
     """Chrome best used with docker
 
     """
-    opt = options.default(webdriver.ChromeOptions())
-    opt = options.nosandbox(opt)
-    opt = options.headless(opt)
-    opt = options.noinfobars(opt)
-    opt = options.noextensions(opt)
-    opt = options.nonotifications(opt)
+    opt = Options.default(webdriver.ChromeOptions())
+    opt = Options.nosandbox(opt)
+    opt = Options.headless(opt)
+    opt = Options.noinfobars(opt)
+    opt = Options.noextensions(opt)
+    opt = Options.nonotifications(opt)
 
     return webdriver.Chrome(options=opt)
 
@@ -199,7 +249,7 @@ def chrome_sandboxed():
     warnings.warn('Docker does not support sandbox option')
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    opt = options.default(webdriver.ChromeOptions())
+    opt = Options.default(webdriver.ChromeOptions())
 
     return webdriver.Chrome(options=opt)
 
@@ -210,8 +260,8 @@ def chrome_nosandbox():
     """
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    opt = options.default(webdriver.ChromeOptions())
-    opt = options.nosandbox(opt)
+    opt = Options.default(webdriver.ChromeOptions())
+    opt = Options.nosandbox(opt)
 
     return webdriver.Chrome(options=opt)
 
@@ -223,8 +273,8 @@ def chrome_headless_sandboxed():
     warnings.warn('Docker does not support sandbox option')
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    opt = options.default(webdriver.ChromeOptions())
-    opt = options.headless(opt)
+    opt = Options.default(webdriver.ChromeOptions())
+    opt = Options.headless(opt)
 
     return webdriver.Chrome(options=opt)
 
@@ -235,9 +285,9 @@ def chrome_headless_nosandbox():
     """
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    opt = options.default(webdriver.ChromeOptions())
-    opt = options.headless(opt)
-    opt = options.nosandbox(opt)
+    opt = Options.default(webdriver.ChromeOptions())
+    opt = Options.headless(opt)
+    opt = Options.nosandbox(opt)
 
     return webdriver.Chrome(options=opt)
 
@@ -248,10 +298,10 @@ def chrome_headless_nosandbox_unsafe():
     """
     warnings.warn('Default shm size is 64m, which will cause chrome driver to crash.', Warning)
 
-    opt = options.default(webdriver.ChromeOptions())
-    opt = options.headless(opt)
-    opt = options.nosandbox(opt)
-    opt = options.unsafe(opt)
+    opt = Options.default(webdriver.ChromeOptions())
+    opt = Options.headless(opt)
+    opt = Options.nosandbox(opt)
+    opt = Options.unsafe(opt)
 
     return webdriver.Chrome(options=opt)
 
@@ -260,10 +310,10 @@ def chrome_headless_nosandbox_noshm():
     """Headless Chrome with sandbox disabled
 
     """
-    opt = options.default(webdriver.ChromeOptions())
-    opt = options.headless(opt)
-    opt = options.nosandbox(opt)
-    opt = options.noshm(opt)
+    opt = Options.default(webdriver.ChromeOptions())
+    opt = Options.headless(opt)
+    opt = Options.nosandbox(opt)
+    opt = Options.noshm(opt)
 
     return webdriver.Chrome(options=opt)
 
@@ -274,10 +324,10 @@ def chrome_headless_nosandbox_bigshm():
     """
     warnings.warn('Larger shm option is not implemented', Warning)
 
-    opt = options.default(webdriver.ChromeOptions())
-    opt = options.headless(opt)
-    opt = options.nosandbox(opt)
-    opt = options.bigshm(opt)
+    opt = Options.default(webdriver.ChromeOptions())
+    opt = Options.headless(opt)
+    opt = Options.nosandbox(opt)
+    opt = Options.bigshm(opt)
 
     return webdriver.Chrome(options=opt)
 
@@ -315,9 +365,3 @@ def screenshot_name(browser, prefix=None):
         return '{}_{}_{}_{}{}'.format(prefix, hostname_, title_, timestamp, '.png')
 
     return '{}_{}_{}{}'.format(hostname_, title_, timestamp, '.png')
-
-
-if __name__ == "__main__":
-    browser = chrome()
-    browser.close()
-    browser.quit()

@@ -16,7 +16,7 @@ async def es_wrapper(hosts):
 
     """
     warnings.warn('This library is no longer used', DeprecationWarning)
-    Hevlog.logging.debug('[es_wrapper] Connecting to Elasticsearch')
+    hevlog.logging.debug('[es_wrapper] Connecting to Elasticsearch')
 
     return await Elasticsearch(hosts)
 
@@ -27,7 +27,7 @@ async def send_doc(es):
     """
     warnings.warn('This library is no longer used', DeprecationWarning)
 
-    Hevlog.logging.debug('[send_doc] Sending doc')
+    hevlog.logging.debug('[send_doc] Sending doc')
     return
 
 
@@ -37,7 +37,7 @@ async def get_alias(es, alias='*'):
     """
     warnings.warn('This library is no longer used', DeprecationWarning)
 
-    Hevlog.logging.debug('[get_alias] Get alias: {}'.format(alias))
+    hevlog.logging.debug('[get_alias] Get alias: {}'.format(alias))
     return await es.indices.get_alias(alias)
 
 
@@ -47,7 +47,7 @@ async def get_indice(es, index='*'):
     """
     warnings.warn('This library is no longer used', DeprecationWarning)
 
-    Hevlog.logging.debug('[get_indice] Get index: {}'.format(index))
+    hevlog.logging.debug('[get_indice] Get index: {}'.format(index))
     return await es.indices.get(index)
 
 
@@ -57,7 +57,7 @@ async def info(es):
     """
     warnings.warn('This library is no longer used', DeprecationWarning)
 
-    Hevlog.logging.debug('[info] Cluster info')
+    hevlog.logging.debug('[info] Cluster info')
     return await es.info()
 
 
@@ -67,7 +67,7 @@ async def ping(es):
     """
     warnings.warn('This library is no longer used', DeprecationWarning)
 
-    Hevlog.logging.debug('[ping] Ping Elasticsearch cluster')
+    hevlog.logging.debug('[ping] Ping Elasticsearch cluster')
     return await es.ping()
 
 
@@ -101,7 +101,7 @@ class ElasticsearchConnect:
                 self.wrapper = None
             finally:
                 if self.wrapper is None:
-                    Hevlog.logging.error('No elasticsearch hosts available')
+                    hevlog.logging.error('No elasticsearch hosts available')
                     raise Exception('No elasticsearch hosts available')
 
         self.host = host
@@ -114,12 +114,12 @@ class ElasticsearchConnect:
             num_indices = len(retrieved_indices)
 
             msg = 'Search found {} indices'.format(num_indices)
-            Hevlog.logging.info('[search indices] {}'.format(msg))
+            hevlog.logging.info('[search indices] {}'.format(msg))
             return retrieved_indices
         except elasticsearch.exceptions.NotFoundError:
             msg = '''You provided the index pattern '{}', but searches returned fruitless'''
             msg = msg.format(index_pattern)
-            Hevlog.logging.error('[search indices] {}'.format(msg))
+            hevlog.logging.error('[search indices] {}'.format(msg))
 
     def delete_indices(self, index_pattern):
 
@@ -127,7 +127,7 @@ class ElasticsearchConnect:
         num_indices = len(retrieved_indices)
 
         msg = 'Search found {} indices'.format(num_indices)
-        Hevlog.logging.info('[delete indices] {}'.format(msg))
+        hevlog.logging.info('[delete indices] {}'.format(msg))
 
         if not num_indices:
             msg = '''No indices found. exiting'''
@@ -171,19 +171,19 @@ class ElasticsearchConnect:
 
         self.indices = retrieved_indices
         msg = 'Retrieved {} indices'.format(num_indices)
-        Hevlog.logging.debug('[get indices] {}'.format(msg))
+        hevlog.logging.debug('[get indices] {}'.format(msg))
 
 
 def clean_indexes(elasticsearch_config):
-    Hevlog.logging.info('Running...')
+    hevlog.logging.info('Running...')
 
     # TODO: this might create too many connections to elasticsearch
     while True:
 
         es = ElasticsearchConnect(elasticsearch_config['hosts'], use_ssl=False, request_timeout=40)
 
-        Hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.wrapper.info()))
-        Hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.get_indices()))
+        hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.wrapper.info()))
+        hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.get_indices()))
 
         DAYS = 14
 
@@ -221,8 +221,8 @@ def clean_indexes(elasticsearch_config):
                 # delete index
                 # es.indices.delete(alias, ignore=[400, 404])
                 es.wrapper.indices.delete(alias)
-                Hevlog.logging.info('[elasticsearch cleaner] deleted {}'.format(alias))
+                hevlog.logging.info('[elasticsearch cleaner] deleted {}'.format(alias))
 
-        Hevlog.logging.info('[ElasticsearchConnect] done')
-        Hevlog.logging.debug('[ElasticsearchConnect] sleeping')
+        hevlog.logging.info('[ElasticsearchConnect] done')
+        hevlog.logging.debug('[ElasticsearchConnect] sleeping')
         sleeper.day('elasticsearch cleanup')

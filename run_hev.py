@@ -29,7 +29,7 @@ except:
 
 
 def bootstrap():
-    Hevlog.logging.info('[bootstrap] Starting...')
+    hevlog.logging.info('[bootstrap] Starting...')
 
     pool = ThreadPoolExecutor(4)
 
@@ -40,10 +40,10 @@ def bootstrap():
     ]
 
     for future in futures:
-        Hevlog.logging.debug('[bootstrap] {} {}'.format(future, future.exception()))
+        hevlog.logging.debug('[bootstrap] {} {}'.format(future, future.exception()))
 
-    # Hevlog.logging.debug('[bootstrap] {}'.format(wait(futures)))
-    Hevlog.logging.debug('[bootstrap] all futures exited')
+    # hevlog.logging.debug('[bootstrap] {}'.format(wait(futures)))
+    hevlog.logging.debug('[bootstrap] all futures exited')
 
 
 if __name__ == "__main__":
@@ -57,5 +57,5 @@ if __name__ == "__main__":
     for future in futureProcesses:
         hevlog.logging.debug('[main] {} {}'.format(future, future.exception()))
 
-    # Hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
+    # hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
     hevlog.logging.debug('[main] all processes exited')

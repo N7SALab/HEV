@@ -286,7 +286,7 @@ def chrome_remote(host='127.0.0.1', port='4444', executor_path='/wd/hub'):
     """Remote Selenium
 
     """
-    Hevlog.logging.info(
+    hevlog.logging.info(
         'Remote WebDriver Hub URL: http://{}:{}{}/static/resource/hub.html'.format(host, port, executor_path))
 
     return webdriver.Remote(

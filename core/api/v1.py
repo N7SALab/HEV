@@ -37,7 +37,7 @@ def load_user(user_id):
 def home(**args):
     """ Default home route
     """
-    Hevlog.logging.info('[home] request: {}'.format(request))
+    hevlog.logging.info('[home] request: {}'.format(request))
     start = int(time.time())
 
     # process and send headers
@@ -57,7 +57,7 @@ def home(**args):
 
     authenticated, error = f.login(request)
 
-    Hevlog.logging.debug('[home] Flask routing took: {} seconds'.format(int(time.time()) - start))
+    hevlog.logging.debug('[home] Flask routing took: {} seconds'.format(int(time.time()) - start))
 
     return render_template('home.html', **locals())
 
@@ -66,7 +66,7 @@ def home(**args):
 def login():
     """ User login page
     """
-    Hevlog.logging.info('[login] request: {}'.format(request))
+    hevlog.logging.info('[login] request: {}'.format(request))
 
     title = 'Hunt Everything'
 
@@ -87,7 +87,7 @@ def logout():
 
     :return: executes flask_login.logout_user in browser session
     """
-    Hevlog.logging.info('[logout] request: {}'.format(request))
+    hevlog.logging.info('[logout] request: {}'.format(request))
 
     logout()
 
@@ -108,7 +108,7 @@ def info():
 
 async def hev():
     # this doesn't work as expected
-    Hevlog.logging.info('[hev] HEV is starting')
+    hevlog.logging.info('[hev] HEV is starting')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)
@@ -119,7 +119,7 @@ def statichev(neo4j_config):
     global n
     n = Neo4jWrapper(neo4j_config)
 
-    Hevlog.logging.info('[statichev] HEV is starting')
+    hevlog.logging.info('[statichev] HEV is starting')
 
     # app.run(host='0.0.0.0', debug=True, port=8080)
     app.run(host='0.0.0.0', port=8080)

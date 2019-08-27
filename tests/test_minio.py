@@ -5,9 +5,12 @@ import datetime
 from core.helpers import minio
 
 try:
-    CONF = json.load(open('/hev/hev-conf.json'))
+    CONF = json.load(open('hev-conf.json'))
 except:
-    CONF = json.load(open('../hev-conf.json'))
+    try:
+        CONF = json.load(open('../hev-conf.json'))
+    except:
+        CONF = json.load(open('/hev/hev-conf.json'))
 
 
 def test_Client():

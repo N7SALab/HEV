@@ -23,9 +23,12 @@ from core.helpers.hevlog import Hevlog
 hevlog = Hevlog('hev', level='debug')
 
 try:
-    CONF = json.load(open('/hev/hev-conf.json'))
-except:
     CONF = json.load(open('hev-conf.json'))
+except:
+    try:
+        CONF = json.load(open('../hev-conf.json'))
+    except:
+        CONF = json.load(open('/hev/hev-conf.json'))
 
 
 def bootstrap():

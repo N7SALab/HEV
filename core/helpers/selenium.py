@@ -37,7 +37,7 @@ class Browser:
             self.browser.get(url)
 
         if not object_name:
-            object_name = screenshot_name(self.browser, prefix)
+            object_name = self.screenshot_name(self.browser, prefix)
 
         Sleeper.seconds('Loading page', 4)
 
@@ -59,7 +59,7 @@ class Browser:
             Sleeper.seconds('Loading page', 4)
 
         if not object_name:
-            object_name = screenshot_name(self.browser, prefix)
+            object_name = self.screenshot_name(self.browser, prefix)
 
         png = self.browser.get_screenshot_as_png()
 
@@ -80,7 +80,7 @@ class Browser:
             Sleeper.seconds('Loading page', 4)
 
         if not object_name:
-            object_name = screenshot_name(self.browser, prefix)
+            object_name = self.screenshot_name(self.browser, prefix)
 
         path = os.path.abspath('/tmp/hev/testing')
         if not os.path.exists(path):
@@ -160,6 +160,27 @@ class Browser:
             actions.send_keys(key)
 
         return actions.perform()
+
+    def screenshot_name(self, prefix=None):
+        """Generate a unique filename
+
+        :param browser:
+        :param prefix: prefix filename with a string
+        :return:
+        """
+        title = self.browser.title
+        url = self.browser.current_url
+        hostname = urlparse(url).hostname
+
+        hostname_ = Sanitation.string(hostname)
+        title_ = Sanitation.string(title)
+        timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
+
+        if prefix:
+            prefix = Sanitation.string(prefix)
+            return '{}_{}_{}_{}{}'.format(prefix, hostname_, title_, timestamp, '.png')
+
+        return '{}_{}_{}{}'.format(hostname_, title_, timestamp, '.png')
 
 
 class Options:
@@ -343,25 +364,3 @@ def chrome_remote(host='127.0.0.1', port='4444', executor_path='/wd/hub'):
         command_executor='http://{}:{}{}'.format(host, port, executor_path),
         desired_capabilities=DesiredCapabilities.CHROME
     )
-
-
-def screenshot_name(browser, prefix=None):
-    """Generate a unique filename
-
-    :param browser:
-    :param prefix: prefix filename with a string
-    :return:
-    """
-    title = browser.title
-    url = browser.current_url
-    hostname = urlparse(url).hostname
-
-    hostname_ = Sanitation.string(hostname)
-    title_ = Sanitation.string(title)
-    timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
-
-    if prefix:
-        prefix = Sanitation.string(prefix)
-        return '{}_{}_{}_{}{}'.format(prefix, hostname_, title_, timestamp, '.png')
-
-    return '{}_{}_{}{}'.format(hostname_, title_, timestamp, '.png')

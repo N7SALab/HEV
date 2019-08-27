@@ -1,5 +1,5 @@
 from core.helpers import wireless
 
 
-def test_Wireless():
+def disabled_test_Wireless():
     wireless.Wireless()

@@ -37,7 +37,7 @@ class Browser:
             self.browser.get(url)
 
         if not object_name:
-            object_name = self.screenshot_name(self.browser, prefix)
+            object_name = self.screenshot_name(prefix)
 
         Sleeper.seconds('Loading page', 4)
 
@@ -59,7 +59,7 @@ class Browser:
             Sleeper.seconds('Loading page', 4)
 
         if not object_name:
-            object_name = self.screenshot_name(self.browser, prefix)
+            object_name = self.screenshot_name(prefix)
 
         png = self.browser.get_screenshot_as_png()
 
@@ -80,7 +80,7 @@ class Browser:
             Sleeper.seconds('Loading page', 4)
 
         if not object_name:
-            object_name = self.screenshot_name(self.browser, prefix)
+            object_name = self.screenshot_name(prefix)
 
         path = os.path.abspath('/tmp/hev/testing')
         if not os.path.exists(path):

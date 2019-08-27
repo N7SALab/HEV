@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from neo4j.v1 import GraphDatabase
 from concurrent.futures import (ThreadPoolExecutor, wait)
 
-from core.helpers.logger import Hevlog
+from core.helpers.hevlog import Hevlog
 
 
 hevlog = Hevlog('neo4j', level='info')

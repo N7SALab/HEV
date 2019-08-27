@@ -11,7 +11,7 @@ import json
 
 from flask import (Flask, request, redirect, render_template)
 
-from core.helpers.logger import Hevlog
+from core.helpers.hevlog import Hevlog
 from core.helpers import crypto
 from core.helpers.neo4j import Neo4jWrapper
 

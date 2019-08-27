@@ -1,6 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 
-from core.helpers.logger import Hevlog
+from core.helpers.hevlog import Hevlog
 from core.helpers.selenium import (Browser, chrome_for_docker)
 
 from core.helpers import minio

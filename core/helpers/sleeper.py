@@ -1,7 +1,7 @@
 import time
 import random
 
-from core.helpers.logger import Hevlog
+from core.helpers.hevlog import Hevlog
 
 hevlog = Hevlog('sleeper', level='info')
 

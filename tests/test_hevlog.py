@@ -1,4 +1,4 @@
-from core.helpers.logger import Hevlog
+from core.helpers.hevlog import Hevlog
 
 hevlog = Hevlog('pytest', level='debug')
 

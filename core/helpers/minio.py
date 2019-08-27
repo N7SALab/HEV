@@ -4,7 +4,7 @@ from minio import Minio
 from minio.definitions import Object
 from urllib.parse import urlparse
 
-from core.helpers.logger import Hevlog
+from core.helpers.hevlog import Hevlog
 
 hevlog = Hevlog('minio', level='info')
 

@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 from core.helpers.sleeper import Sleeper
 from core.helpers.sanitation import Sanitation
-from core.helpers.logger import Hevlog
+from core.helpers.hevlog import Hevlog
 
 from core.helpers.minio import use_public_server
 

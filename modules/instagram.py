@@ -1,10 +1,10 @@
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 
 from core.helpers.logger import Hevlog
 from core.helpers.selenium import (Browser, chrome_for_docker)
 
-from core.helpers import minio, sleeper
+from core.helpers import minio
+from core.helpers.sleeper import Sleeper
 
 hevlog = Hevlog('instagram', level='info')
 
@@ -41,14 +41,12 @@ def authenticate(username, password, minio_client=None, retries=None):
 
         hevlog.logging.debug('[authenticate] {}'.format(login_page))
 
-        sleeper.seconds('instagram get page', 1)
+        Sleeper.seconds('instagram get page', 1)
 
-        actions = ActionChains(browser.browser)
-        actions.send_keys(Keys.TAB)
-        actions.send_keys(username)
-        actions.perform()
+        browser.type(Keys.TAB)
+        browser.type(username)
 
-        sleeper.seconds('instagram get page', 1)
+        Sleeper.seconds('instagram get page', 1)
 
         # the password field is sometimes div[3] and div[4]
         login_pass_xpaths = [
@@ -70,7 +68,7 @@ def authenticate(username, password, minio_client=None, retries=None):
             except:
                 pass
 
-        sleeper.seconds('instagram get page', 2)
+        Sleeper.seconds('instagram get page', 2)
 
         found_btn = False
         for xpath in login_btn_xpaths:
@@ -90,12 +88,12 @@ def authenticate(username, password, minio_client=None, retries=None):
                 '[browser] Found password field: {} Found login button: {}'.format(browser.browser.name, found_pass,
                                                                                    found_btn))
 
-            sleeper.minute("instagram can't authenticate")
+            Sleeper.minute("instagram can't authenticate")
 
     login_pass.send_keys(password)
     login_btn.click()
 
-    sleeper.seconds('wait for instagram to log in', 5)
+    Sleeper.seconds('wait for instagram to log in', 5)
 
     hevlog.logging.debug(
         '[authenticated browser] [{}] {} session: {}'.format(browser.browser.name, browser.browser.title,
@@ -123,7 +121,7 @@ def get_stories(authenticated_browser, account):
         hevlog.logging.debug('[get_stories] no stories for {}'.format(account))
         return num_of_stories
 
-    sleeper.seconds('instagram', 2)
+    Sleeper.seconds('instagram', 2)
 
     while True:
         try:
@@ -135,7 +133,7 @@ def get_stories(authenticated_browser, account):
                 raise Exception
             num_of_stories += 1
             browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
-            sleeper.seconds('watch the story for a bit', 1)
+            Sleeper.seconds('watch the story for a bit', 1)
             browser.save_screenshot_to_minio(bucket_name='screenshots', prefix='instagram/' + account)
         except:
             # TODO: disable browser proxy when done
@@ -205,7 +203,7 @@ def run_instagram_stories(config):
                     else:
                         browser = authenticate(login, password, client)
 
-        sleeper.hour('instagram')
+        Sleeper.hour('instagram')
 
 
 def runrun(browser, account):
@@ -217,7 +215,7 @@ def runrun(browser, account):
 
     hevlog.logging.info('[{}] {} stories'.format(account, num_of_stories))
 
-    # sleeper.minute('instagram')
+    # Sleeper.minute('instagram')
 
     return True
 

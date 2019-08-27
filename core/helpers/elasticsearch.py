@@ -4,7 +4,8 @@ import elasticsearch
 
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
-from core.helpers import sleeper
+
+from core.helpers.sleeper import Sleeper
 from core.helpers.logger import Hevlog
 
 hevlog = Hevlog('elasticsearch', level='info')
@@ -225,4 +226,4 @@ def clean_indexes(elasticsearch_config):
 
         hevlog.logging.info('[ElasticsearchConnect] done')
         hevlog.logging.debug('[ElasticsearchConnect] sleeping')
-        sleeper.day('elasticsearch cleanup')
+        Sleeper.day('elasticsearch cleanup')

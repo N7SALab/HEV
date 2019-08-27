@@ -1,10 +1,10 @@
-from core.helpers import sleeper
+from core.helpers.sleeper import Sleeper
 
 
 def test_seconds():
-    sleeper.seconds('test', 1)
+    Sleeper.seconds('test', 1)
 
 
 def test_minutes():
-    sleeper.minutes('test', .001)
+    Sleeper.minutes('test', .001)
 

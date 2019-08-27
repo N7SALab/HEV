@@ -8,7 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from urllib.parse import urlparse
 
-from core.helpers import sleeper
+from core.helpers.sleeper import Sleeper
 from core.helpers.sanitation import Sanitation
 from core.helpers.logger import Hevlog
 
@@ -39,7 +39,7 @@ class Browser:
         if not object_name:
             object_name = screenshot_name(self.browser, prefix)
 
-        sleeper.seconds('Loading page', 4)
+        Sleeper.seconds('Loading page', 4)
 
         bucket_name = bucket_name
         object_name = object_name
@@ -56,7 +56,7 @@ class Browser:
 
         if url:
             self.browser.get(url)
-            sleeper.seconds('Loading page', 4)
+            Sleeper.seconds('Loading page', 4)
 
         if not object_name:
             object_name = screenshot_name(self.browser, prefix)
@@ -77,7 +77,7 @@ class Browser:
 
         if url:
             self.browser.get(url)
-            sleeper.seconds('Loading page', 4)
+            Sleeper.seconds('Loading page', 4)
 
         if not object_name:
             object_name = screenshot_name(self.browser, prefix)

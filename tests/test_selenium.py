@@ -81,6 +81,7 @@ def test_save_screenshot_to_file():
 
 def test_click():
     browser = Browser(chrome_for_docker())
+    browser.new_resolution('web-small')
     browser.browser.get('https://reddit.com')
     browser.save_screenshot_to_file()
     browser.click('//*[@id="USER_DROPDOWN_ID"]')

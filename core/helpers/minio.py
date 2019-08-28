@@ -11,15 +11,13 @@ hevlog = Hevlog('minio', level='info')
 
 class MinioWrapper:
 
-    def __init__(self, hosts, access_key, secret_key, secure=True, session_token=None, region=None, http_client=None):
-
-        for host in hosts:
-
-            if Networking.check_connection(host):
-                endpoint = Networking.urlparse(host).netloc
-                self.Minio = Minio(endpoint=endpoint,
-                                   access_key=access_key,
-                                   secret_key=secret_key,
+    def __init__(self, MINIO_CONF, secure=True, session_token=None, region=None, http_client=None):
+        for host in MINIO_CONF['host']:
+            endpoint = urlparse(host)
+            if Networking.check_connection(endpoint.hostname, endpoint.port):
+                self.Minio = Minio(endpoint=endpoint.netloc,
+                                   access_key=MINIO_CONF['access_key'],
+                                   secret_key=MINIO_CONF['secret_key'],
                                    secure=secure,
                                    session_token=session_token,
                                    region=region,

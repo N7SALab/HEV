@@ -2,20 +2,20 @@
   "neo4j": {
     "user": "neo4j",
     "password": "951jfqDGa2calp6xgUIRASYCiuQwAhBcqA0CH5qiEuxGojoW0y",
-    "servers": ["bolt://neo4j:7687", "bolt://192.168.86.10:32583", "bolt://rancher.n7sa.com:32583"]
+    "servers": ["bolt://neo4j.world0:7687", "bolt://192.168.86.10:32583", "bolt://rancher.n7sa.com:32583"]
   },
   "minio": {
-    "host": ["http://minio:9000", "http://rancher.n7sa.com:32681"],
+    "host": ["http://minio.world0:9000", "http://rancher.n7sa.com:32681"],
     "access_key": "NN1UAD8ZEWMBUAU4KYTP",
     "secret_key": "mk2qXm4ZHyGSyFggXMi79mZ8Ov7gBkts0OGYuwR3"
   },
   "minio-hev": {
-    "host": ["http://minio-hev:9000", "http://rancher.n7sa.com:32568"],
+    "host": ["http://minio-hev.world0:9000", "http://rancher.n7sa.com:32568"],
     "access_key": "hev",
     "secret_key": "huntingenvironment"
   },
   "minio-pub": {
-    "host": ["http://minio-pub:9000", "http://rancher.n7sa.com:30958"],
+    "host": ["http://minio-pub.world0:9000", "http://rancher.n7sa.com:30958"],
     "access_key": "anonymous",
     "secret_key": "anonymous"
   },
@@ -56,7 +56,7 @@
   },
   "elasticsearch": {
     "hosts": [
-        "http://elasticsearch:9200",
+        "http://elasticsearch.world0:9200",
         "http://rancher.n7sa.com:30384"
     ]
   },

@@ -1,0 +1,38 @@
+{
+  "elasticsearch": {
+    "hosts": ["http://elasticseach:9200"]
+  },
+  "neo4j": {
+    "user": "neo4j",
+    "password": "",
+    "servers": ["bolt://neo4j:7687"]
+  },
+  "minio": {
+    "host": "minio:9000",
+    "access_key": "",
+    "secret_key": "",
+    "bucket": "",
+    "folder": "",
+    "client_configs": ""
+  },
+  "openvpn": {
+    "bucket": "data",
+    "configs": [{
+      "name": "openvpn",
+      "prefix": "",
+      "hosts": ["vpn.domain.com:1194:udp"],
+      "folder": "openvpn"
+    }]
+  },
+  "degoo": {
+    "account": "",
+    "password": ""
+  },
+  "instagram": {
+    "login": {
+      "account": "",
+      "password": ""
+    },
+    "following": []
+  }
+}

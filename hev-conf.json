@@ -21,8 +21,7 @@
   },
   "openvpn": {
     "bucket": "data",
-    "configs": [
-      {
+    "configs": [{
         "name": "openvpn",
         "prefix": "",
         "hosts": ["vpn.n7sa.com:1194:udp", "rancher.n7sa.com:30039:udp"],
@@ -56,9 +55,13 @@
   },
   "elasticsearch": {
     "hosts": [
-        "http://elasticsearch.world0:9200",
-        "http://rancher.n7sa.com:30384"
+      "http://elasticsearch.world0:9200",
+      "http://rancher.n7sa.com:30384"
     ]
+  },
+  "degoo": {
+    "account": "naisanza@gmail.com",
+    "password": "x8cD89HtswYZ"
   },
   "instagram": {
     "login": {

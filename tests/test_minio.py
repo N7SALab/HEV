@@ -73,7 +73,6 @@ except:
 
 
 if __name__ == "__main__":
-    test_Client()
     test_clear_bucket()
 
 

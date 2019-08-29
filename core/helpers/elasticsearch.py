@@ -4,9 +4,9 @@ import elasticsearch
 
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
-from core.helpers.hevlog import Hevlog
+
 from core.helpers.sleeper import Sleeper
-from core.helpers.networking import Networking
+from core.helpers.hevlog import Hevlog
 
 hevlog = Hevlog('elasticsearch', level='info')
 
@@ -72,36 +72,46 @@ async def ping(es):
     return await es.ping()
 
 
-class ElasticsearchWrapper:
+class ElasticsearchConnect:
 
-    def __init__(self, hosts=['elasticsearch'], request_timeout=10,
+    def __init__(self, host=['elasticsearch'], request_timeout=10,
                  http_auth=None, use_ssl=True, verify_certs=True,
                  connection_class=RequestsHttpConnection):
+        """
 
-        for host in hosts:
+        :param host:
+        :param request_timeout:
+        :param http_auth:
+        :param use_ssl:
+        :param verify_certs:
+        :param connection_class:
+        """
 
-            if Networking.check_connection(host):
-                self.Elasticsearch = Elasticsearch(
-                    hosts=host,
+        for _host in host:
+            try:
+                self.wrapper = Elasticsearch(
+                    hosts=[_host],
                     request_timeout=request_timeout,
                     http_auth=http_auth,
                     use_ssl=use_ssl,
                     verify_certs=verify_certs,
                     connection_class=connection_class
                 )
-                self.connected = True
                 break
-        else:
-            self.connected = False
-            hevlog.logging.error('No elasticsearch hosts available')
+            except:
+                self.wrapper = None
+            finally:
+                if self.wrapper is None:
+                    hevlog.logging.error('No elasticsearch hosts available')
+                    raise Exception('No elasticsearch hosts available')
 
-        self.hosts = hosts
+        self.host = host
         self.cache = []
         self.indices = []
 
     def search_indices(self, index_pattern):
         try:
-            retrieved_indices = self.Elasticsearch.indices.get(index_pattern)
+            retrieved_indices = self.wrapper.indices.get(index_pattern)
             num_indices = len(retrieved_indices)
 
             msg = 'Search found {} indices'.format(num_indices)
@@ -150,14 +160,14 @@ class ElasticsearchWrapper:
                 msg = msg.format(index)
                 print(msg, end='')
                 # Delete the index
-                self.Elasticsearch.indices.delete(index=index)
+                self.wrapper.indices.delete(index=index)
                 print('done')
         else:
             msg = '''Whew, you might have just blew it, if you had said yes'''
             print(msg)
 
     def get_indices(self):
-        retrieved_indices = self.Elasticsearch.indices.get('*')
+        retrieved_indices = self.wrapper.indices.get('*')
         num_indices = len(retrieved_indices)
 
         self.indices = retrieved_indices
@@ -168,13 +178,15 @@ class ElasticsearchWrapper:
 class ElasticsearchRun:
 
     @staticmethod
-    def clean_indexes(elasticsearch_hosts):
+    def clean_indexes(elasticsearch_config):
         hevlog.logging.info('Running...')
 
+        # TODO: this might create too many connections to elasticsearch
         while True:
-            es = ElasticsearchWrapper(elasticsearch_hosts, use_ssl=False, request_timeout=40)
 
-            hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.Elasticsearch.info()))
+            es = ElasticsearchConnect(elasticsearch_config['hosts'], use_ssl=False, request_timeout=40)
+
+            hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.wrapper.info()))
             hevlog.logging.debug('[elasticsearch cleaner] {}'.format(es.get_indices()))
 
             DAYS = 14
@@ -197,7 +209,7 @@ class ElasticsearchRun:
 
             for alias in keys:
                 # indices = get_indice(es, alias)
-                indices = es.Elasticsearch.indices.get(alias)
+                indices = es.wrapper.indices.get(alias)
 
                 creation_date = indices[alias]['settings']['index']['creation_date']
                 creation_date = int(creation_date)
@@ -212,9 +224,9 @@ class ElasticsearchRun:
                 if creation_date < delete_older:
                     # delete index
                     # es.indices.delete(alias, ignore=[400, 404])
-                    es.Elasticsearch.indices.delete(alias)
+                    es.wrapper.indices.delete(alias)
                     hevlog.logging.info('[elasticsearch cleaner] deleted {}'.format(alias))
 
-            hevlog.logging.info('[ElasticsearchWrapper] done')
-            hevlog.logging.debug('[ElasticsearchWrapper] sleeping')
+            hevlog.logging.info('[ElasticsearchConnect] done')
+            hevlog.logging.debug('[ElasticsearchConnect] sleeping')
             Sleeper.day('elasticsearch cleanup')

@@ -28,8 +28,8 @@ def test_MinioWrapper():
 
 
 def test_check_connection():
-    assert Networking.check_connection('google.com', 80) is True
-    assert Networking.check_connection('minio.0000000', 9000) is False
+    assert Networking.check_connection('http://google.com:80') is True
+    assert Networking.check_connection('http://minio.0000000:9000') is False
 
 
 def test_client():

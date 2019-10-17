@@ -57,8 +57,10 @@ def test_public_upload():
 def test_clear_bucket():
     client = minio.MinioWrapper(CONF['minio-hev'], secure=False)
     bucket_name = 'testing'
+    client.make_bucket(bucket_name)
     client.clear_bucket(bucket_name)
     bucket_name = 'screenshots'
+    client.make_bucket(bucket_name)
     client.clear_bucket(bucket_name)
 
 

@@ -5,13 +5,17 @@ import datetime
 from core.helpers import minio
 from core.helpers.networking import Networking
 
-try:
-    CONF = json.load(open('hev-conf.json'))
-except:
+configs = [
+    'hev-conf.json',
+    '../hev-conf.json',
+    '/hev/hev-conf.json'
+]
+
+for c in configs:
     try:
-        CONF = json.load(open('../hev-conf.json'))
+        CONF = json.load(open(c))
     except:
-        CONF = json.load(open('/hev/hev-conf.json'))
+        pass
 
 
 def test_MinioWrapper():

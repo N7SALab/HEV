@@ -1,11 +1,11 @@
 import psutil
 
-from core.helpers.log import hevlog
+from core.helpers.hevlog import Hevlog
 
-hevlog = hevlog('cpu', level='debug')
+hevlog = Hevlog('cpu', level='debug')
 
 
-def _cpu_usage(self, max_cpu_percentage=80):
+def cpu_usage(self, max_cpu_percentage=80):
     """Limit max cpu usage
     """
     if psutil.cpu_percent() < max_cpu_percentage:

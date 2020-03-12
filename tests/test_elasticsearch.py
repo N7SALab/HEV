@@ -1,5 +1,5 @@
-from core.helpers.elasticsearch import ElasticsearchConnect
+from core.helpers.elasticsearch import ElasticsearchWrapper
 
 
-def test_ElasticsearchConnect():
-    assert ElasticsearchConnect(['elasticsearch.0000000'], use_ssl=False, request_timeout=1).wrapper.ping() is False
+def test_ElasticsearchWrapper():
+    assert ElasticsearchWrapper(['elasticsearch.0000000'], use_ssl=False, request_timeout=1).connected is False

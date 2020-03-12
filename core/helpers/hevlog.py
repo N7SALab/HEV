@@ -13,7 +13,7 @@ from logging import (CRITICAL, FATAL, ERROR, WARNING, WARN, INFO, DEBUG, NOTSET)
 # NOTSET = 0
 
 
-class hevlog:
+class Hevlog:
 
     def __init__(self, name=None, level='info'):
         """ HEV logging class

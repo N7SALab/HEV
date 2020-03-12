@@ -10,7 +10,7 @@ Flask-WTF==0.14.2
 idna==2.8
 minio==4.0.18
 neo4j-driver==1.7.4
-psutil==5.6.3
+psutil==5.6.6
 pytest==5.0.1
 pytz==2019.1
 requests==2.22.0

@@ -4,7 +4,7 @@ LABEL maintainer="naisanza@gmail.com"
 LABEL description="Hunt Everything"
 LABEL dockername="n7salab/hev"
 
-WORKDIR /tmp
+WORKDIR /tmp/hev
 
 # Install Chrome Driver
 RUN driver="chromedriver.zip" \

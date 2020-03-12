@@ -15,10 +15,10 @@ if [ ! -f $DOCKERFILE ]; then echo "*** missing $DOCKERFILE ***"; exit 1; fi
 STR=$(cat $DOCKERFILE | grep LABEL | grep dockername) || { echo "failed"; exit 1; }
 DOCKERNAME=$(echo "$STR" | cut -d '=' -f 2 | cut -d ' ' -f 3 | sed  's/"//g') || { echo "failed"; exit 1; }
 
+set -ex
+
 # get dockertag
 DOCKERTAG=$(git describe --tags)
-
-set -ex
 
 # build image
 docker build -t $DOCKERNAME:$DOCKERTAG .

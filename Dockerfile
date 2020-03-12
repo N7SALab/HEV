@@ -1,7 +1,7 @@
 FROM python:3
 
 LABEL maintainer="naisanza@gmail.com"
-LABEL description="Hunt Everythning"
+LABEL description="Hunt Everything"
 LABEL dockername="n7salab/hev"
 
 WORKDIR /tmp
@@ -35,7 +35,7 @@ COPY tests tests
 COPY web web
 COPY run_hev.py .
 COPY requirements.txt .
-COPY hev-conf.json .
+COPY hev.env .
 
 # Install python packages
 RUN python3 -m pip install -r requirements.txt

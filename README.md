@@ -1,20 +1,22 @@
 # HEV
 Hunting EnVironment - Gather everything. Analyze everything. 
 
-# build
+#### build
 
 - `cp hev-example.env hev.env`
+
+then
 
 ```
 ./build.sh
 ```
 
-# test
+#### test
 ```
 ./tests.sh
 ```
 
-# run
+#### run
 ```
 python3 run_hev.py
 ```

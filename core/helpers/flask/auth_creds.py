@@ -11,6 +11,7 @@ def credential_db():
         # 'admin': b'disabled',
         # 'test': b'disabled',
         'hev@hev': b'$2b$12$c.A//7LqYwWyEJXFOZ.ymuoJUwKfMJgl5zXGEbtaJ2gSCZBWtj/Hy',
+        'hev@hev': b'$2b$12$R/0oHYkBwx.Sf9HX2yC4WubRnfFbH/JuovztgQuhYGiKDgz2gdYHy',
     }
 
     return credentials

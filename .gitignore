@@ -1,9 +1,3 @@
-.idea/
-.vscode/
-venv/
-hev.conf
-follows_users_naisanzaa_20190714_2330.csv.json
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -107,3 +101,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+.idea/
+.vscode/
+venv/
+hev.conf
+hev-conf.json

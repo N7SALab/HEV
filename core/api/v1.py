@@ -5,29 +5,27 @@
 
 __version__ = '0.0.1'
 
-
 import time
 import json
 
 from flask import (Flask, request, redirect, render_template)
 
-from core.helpers.log import hevlog
-from core.helpers.crypto import secret
-from core.helpers.neo4j import Neo4jWrapper
-
+from core.helpers import crypto
 from core.helpers import flask as f
+from core.helpers.neo4j import Neo4jWrapper
+from core.helpers.hevlog import Hevlog
 
-hevlog = hevlog('hevapi', level='debug')
-
+hevlog = Hevlog('hevapi', level='debug')
 
 # Initializing app
 app = Flask(__name__, template_folder='../../web/templates', static_folder='../../web/static')
-app.secret_key = secret.new_secret_key()
+app.secret_key = crypto.new_secret_key()
 app.jinja_options = f.javascript_compatibility(app)
-
 
 # User Management
 login_manager = f.login_manager_wrapper(app)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return f.load_user(user_id)
@@ -104,8 +102,6 @@ def info():
 
 # authentication required
 @app.route('/dl/')
-
-
 async def hev():
     # this doesn't work as expected
     hevlog.logging.info('[hev] HEV is starting')
@@ -114,10 +110,10 @@ async def hev():
     app.run(host='0.0.0.0', port=8080)
 
 
-def statichev(neo4j_config):
+def statichev(neo4j_user, neo4j_password, neo4j_servers):
     # Neo4j
     global n
-    n = Neo4jWrapper(neo4j_config)
+    n = Neo4jWrapper(user=neo4j_user, password=neo4j_password, servers=neo4j_servers)
 
     hevlog.logging.info('[statichev] HEV is starting')
 
@@ -128,8 +124,8 @@ def statichev(neo4j_config):
 if __name__ == "__main__":
 
     try:
-        CONF = json.load(open('../../hev.conf'))
+        CONF = json.load(open('/hev/hev-conf.json'))
     except:
-        CONF = json.load(open('hev.conf'))
+        CONF = json.load(open('../../hev.conf'))
 
     statichev(CONF['neo4j'])

@@ -2,36 +2,23 @@
 #
 # HEV Bootstrap Starter
 #
-# creator: ainiml
-# created: Thu Oct 25 12:16:49 EDT 2018
-#
 # Usage: python3 run-hev.py
 
-__version__ = '0.0.4'
-
 import os
-import json
 
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import (ThreadPoolExecutor)
 
-import core
-import modules
-
-from modules import openvpn
-from modules import instagram
-
 from core import api
-from core.helpers import elasticsearch
-from core.helpers.log import hevlog
+from modules.openvpn import Openvpn
+from modules.instagram import Instagram
+from core.helpers.config import Config
+from core.helpers.hevlog import Hevlog
+from core.helpers.elasticsearch import ElasticsearchRun
 
-hevlog = hevlog('hev', level='debug')
+hevlog = Hevlog('hev', level='debug')
 
-
-try:
-    CONF = json.load(open('/var/www/hev.conf'))
-except:
-    CONF = json.load(open('hev.conf'))
+CONF = Config()
 
 
 def bootstrap():
@@ -40,9 +27,13 @@ def bootstrap():
     pool = ThreadPoolExecutor(4)
 
     futures = [
-        pool.submit(core.helpers.elasticsearch.index_cleanup.run, CONF['elasticsearch']),
-        pool.submit(modules.openvpn.build_client_configs.run, CONF['minio']),
-        pool.submit(modules.instagram.run, CONF['instagram']),
+        pool.submit(ElasticsearchRun.clean_indexes, CONF.ELASTICSEARCH_HOSTS),
+        pool.submit(Openvpn.build_client_configs,
+                    CONF.MINIO_HOST, CONF.MINIO_ACCESS_KEY, CONF.MINIO_SECRET_KEY,
+                    CONF.OPENVPN),
+        pool.submit(Instagram.run_stories,
+                    CONF.INSTAGRAM_USER, CONF.INSTAGRAM_PASSWORD, CONF.INSTAGRAM_FOLLOWING_LIST,
+                    CONF.MINIO_HEV_HOST, CONF.MINIO_HEV_ACCESS_KEY, CONF.MINIO_HEV_SECRET_KEY),
     ]
 
     for future in futures:
@@ -56,7 +47,7 @@ if __name__ == "__main__":
     processPool = ProcessPoolExecutor(os.cpu_count())
 
     futureProcesses = [
-        processPool.submit(api.statichev, CONF['neo4j']),
+        processPool.submit(api.statichev, CONF.NEO4J_USER, CONF.NEO4J_PASSWORD, CONF.NEO4J_SERVERS_LIST),
         processPool.submit(bootstrap),
     ]
 
@@ -65,4 +56,3 @@ if __name__ == "__main__":
 
     # hevlog.logging.debug('[main] {}'.format(wait(futureProcesses)))
     hevlog.logging.debug('[main] all processes exited')
-

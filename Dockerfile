@@ -25,7 +25,6 @@ COPY tests tests
 COPY web web
 COPY run_hev.py .
 COPY requirements.txt .
-COPY hev.env .
 
 # Install python packages
 RUN python3 -m pip install -r requirements.txt

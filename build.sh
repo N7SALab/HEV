@@ -15,6 +15,11 @@ if [ ! -f $DOCKERFILE ]; then echo "*** missing $DOCKERFILE ***"; exit 1; fi
 STR=$(cat $DOCKERFILE | grep LABEL | grep dockername) || { echo "failed"; exit 1; }
 DOCKERNAME=$(echo "$STR" | cut -d '=' -f 2 | cut -d ' ' -f 3 | sed  's/"//g') || { echo "failed"; exit 1; }
 
+# pre-checks
+if [ ! -f hev.env ]; then
+  cp -v hev-example.env hev.env
+fi
+
 set -ex
 
 # get dockertag
@@ -27,7 +32,7 @@ docker tag $DOCKERNAME:$DOCKERTAG $DOCKERNAME:latest
 # test image
 #docker run --rm --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests"
 # big shm-size for chrome to work
-docker run --rm --shm-size 2g --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests"
+#docker run --rm --shm-size 2g --entrypoint "/usr/local/bin/pytest" $DOCKERNAME:$DOCKERTAG "/hev/tests"
 
 # push image
 docker push $DOCKERNAME:$DOCKERTAG

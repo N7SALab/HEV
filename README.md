@@ -37,6 +37,7 @@ then
 
 #### test
 ```
+source hev.env
 ./tests.sh
 ```
 

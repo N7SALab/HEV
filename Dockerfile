@@ -6,20 +6,10 @@ LABEL dockername="n7salab/hev"
 
 WORKDIR /tmp/hev
 
-# Install Chrome Driver
-RUN driver="chromedriver.zip" \
-    && wget -v -O "$driver" "https://chromedriver.storage.googleapis.com/77.0.3865.40/chromedriver_linux64.zip" \
-    && unzip -o -d /usr/local/bin chromedriver.zip \
-    && rm -rf *
+COPY drivers.sh .
 
-# Install Chrome Browser
-RUN browser="google-chrome.deb" \
-    && apt update \
-    && wget -v -O "$browser" "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" \
-    && dpkg -i "$browser" \
-    || apt install -f -y \
-    && apt autoclean \
-    && rm -rf *
+# Install Chrome Driver
+RUN ./drivers.sh
 
 # Install wifite2
 RUN git clone https://github.com/derv82/wifite2 \

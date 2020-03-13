@@ -36,6 +36,7 @@ docker tag $DOCKERNAME:$DOCKERTAG $DOCKERNAME:latest
 
 # push image
 docker push $DOCKERNAME:$DOCKERTAG
+docker push $DOCKERNAME:latest
 
 # push image
 #REGISTRY="registry:5000"

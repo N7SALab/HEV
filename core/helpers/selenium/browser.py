@@ -8,7 +8,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from urllib.parse import urlparse
 
-from core.helpers import sanitation, sleeper
+from core.helpers import sleeper
+from core.helpers.sanitation import Sanitation
 from core.helpers.logger import Hevlog
 from core.helpers.selenium import options
 
@@ -305,12 +306,12 @@ def screenshot_name(browser, prefix=None):
     url = browser.current_url
     hostname = urlparse(url).hostname
 
-    hostname_ = sanitation.string(hostname)
-    title_ = sanitation.string(title)
+    hostname_ = Sanitation.string(hostname)
+    title_ = Sanitation.string(title)
     timestamp = str(datetime.datetime.now().isoformat()).replace(':', '_')
 
     if prefix:
-        prefix = sanitation.string(prefix)
+        prefix = Sanitation.string(prefix)
         return '{}_{}_{}_{}{}'.format(prefix, hostname_, title_, timestamp, '.png')
 
     return '{}_{}_{}{}'.format(hostname_, title_, timestamp, '.png')

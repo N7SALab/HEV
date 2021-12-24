@@ -107,4 +107,4 @@ def test_type():
 
 
 if __name__ == "__main__":
-    test_click()
+    test_save_screenshot_to_file()
